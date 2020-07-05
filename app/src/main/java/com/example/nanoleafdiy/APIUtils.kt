@@ -1,6 +1,5 @@
 package com.example.nanoleafdiy
 
-import android.graphics.Path
 import kotlin.math.*
 import java.util.Collections.max as maxOf
 import java.util.Collections.min as minOf

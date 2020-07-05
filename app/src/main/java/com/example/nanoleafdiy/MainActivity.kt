@@ -2,7 +2,6 @@ package com.example.nanoleafdiy
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.AttributeSet
@@ -33,18 +32,15 @@ class MainActivity : AppCompatActivity() {
         attrs: AttributeSet? = null,
         defStyle: Int = 0
     ): AppCompatImageView(context, attrs, defStyle) {
-        private val networkDiagram: NetworkDiagramDrawable = NetworkDiagramDrawable()
 
         override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
             super.onLayout(changed, left, top, right, bottom)
-            setImageDrawable(networkDiagram)
             computeNetworkTopology()
             adjustPosition(width, height)
         }
-    }
 
-    class NetworkDiagramDrawable : Drawable() {
-        override fun draw(canvas: Canvas) {
+        override fun onDraw(canvas: Canvas) {
+            super.onDraw(canvas)
             val strokePaint: Paint = Paint().apply {
                 strokeWidth = 5F
                 color = Color.BLUE
@@ -55,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                 color = Color.RED
                 style = Paint.Style.FILL
             }
-            
+
             for(panel in panels) {
                 val path = panel.getPath()
                 canvas.drawPath(path, strokePaint)
@@ -66,16 +62,6 @@ class MainActivity : AppCompatActivity() {
                     style = Paint.Style.FILL
                 }
             }
-        }
-
-        override fun setAlpha(p0: Int) {
-            TODO("Not yet implemented")
-        }
-
-        override fun getOpacity(): Int = PixelFormat.OPAQUE
-
-        override fun setColorFilter(p0: ColorFilter?) {
-            TODO("Not yet implemented")
         }
     }
 }
