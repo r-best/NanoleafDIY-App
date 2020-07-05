@@ -1,68 +1,27 @@
 package com.example.nanoleafdiy
 
 import android.graphics.Path
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
-import kotlin.math.min
-import kotlin.properties.Delegates
+import kotlin.math.*
 import java.util.Collections.max as maxOf
 import java.util.Collections.min as minOf
 
 
 typealias Vertex = Pair<Float, Float>
 
-val PADDING = 20
-var PANEL_SCALE: Int = 10
-
 // I was never any good with radians, I want to use degrees instead
 val sinD = { degrees: Float -> sin(degrees * PI.toFloat() / 180f) }
 val cosD = { degrees: Float -> cos(degrees * PI.toFloat() / 180f) }
 
-class Panel {
-    // Navigation directions that the controller uses to send instructions to a particular panel
-    lateinit var directions: String
-    var parent: Panel? = null
-    var left: Panel? = null
-    var right: Panel? = null
-
-    // The coordinates of the bottom-left vertex of the triangle
-    lateinit var position: Vertex
-    // The angle, measured clockwise from East, that points toward vertex 2
-    var angle: Float = 0f
-
-    /** Computes the position of the bottom-right vertex */
-    fun getV2(): Vertex = Pair(
-        position.first + PANEL_SCALE * cosD(angle),
-        position.second + PANEL_SCALE * sinD(angle)
-    )
-
-    /** Computes the position of the top vertex */
-    fun getV3(): Vertex = Pair(
-        position.first + PANEL_SCALE * cosD(-60f + angle),
-        position.second + PANEL_SCALE * sinD(-60f + angle)
-    )
-
-    /**
-     * Returns a Path object using the triangle's
-     * vertices that can be drawn to the screen
-     */
-    fun getPath(): Path {
-        val v2: Vertex = getV2()
-        val v3: Vertex = getV3()
-        val path = Path()
-        path.moveTo(position.first, position.second)
-        path.lineTo(v2.first, v2.second)
-        path.lineTo(v3.first, v3.second)
-        path.lineTo(position.first, position.second)
-        return path
-    }
-}
+// Buffer between the diagram and the edge of the screen
+const val PADDING = 20
 
 // Don't technically need this since the network is a doubly linked list,
 // but it makes iterating all the panels easier and I'm relishing in writing
 // code for a device with more than 2KB of memory
 var panels: MutableList<Panel> = mutableListOf()
+
+// Length of one side of a triangle, gets scaled to fit the diagram nicely on the screen
+var PANEL_SCALE: Int = 10
 
 /**
  * Reads the string encoding of the panel network structure
@@ -72,18 +31,14 @@ var panels: MutableList<Panel> = mutableListOf()
  */
 fun computeNetworkTopology(){
     // Make request to panel controller, stub for now
-    val tree: String = "(((XX)X)((XX)((XX)X)))"
+    val tree: String = "(((XX)X)(X((XX)X)))"
+//    val tree: String = "()"
 //    val tree: String = "(XX)"
 //    val tree: String = "((XX)(XX))"
 //    val tree: String = "((XX)X)"
 
-    // Create root panel
-    panels = mutableListOf()
-    panels.add(Panel().apply {
-        directions = ""
-        position = Pair(0f, 0f)
-        angle = 0f
-    })
+    // Initialize list & create root panel
+    panels = mutableListOf(Panel())
 
     // Iterate through the string representation and construct the tree from it
     var active: Panel = panels[0]
@@ -135,13 +90,15 @@ fun adjustPosition(boundsX: Int, boundsY: Int){
     // Compute what scaling factor we need to make the diagram fill the screen,
     // with a small bit of padding on the edges
     val scaleFactor = min((boundsX - PADDING*2) / (maxX - minX), (boundsY - PADDING*2) / (maxY - minY))
-    println("Scale Factor: $scaleFactor")
     if(scaleFactor != 1f){
         // Adjust the scale of the diagram
         PANEL_SCALE = (PANEL_SCALE * scaleFactor).toInt()
 
         // Recompute vertices & bounds with new panel size
         for(panel in panels){
+            // Same rule as during initial tree creation, left panels need to be
+            // positioned on their parent's position, and right ones are positioned
+            // on their parent's top vertex (v3)
             if(panel.parent != null){
                 if(panel.directions.endsWith("R"))
                     panel.position = panel.parent!!.getV3()
@@ -149,8 +106,8 @@ fun adjustPosition(boundsX: Int, boundsY: Int){
                     panel.position = panel.parent!!.position
             }
         }
-        val (temp1, temp2, temp3, temp4) = _getDiagramBounds()
-        minX = temp1; maxX = temp2; minY = temp3; maxY = temp4
+        val (temp1, _, temp3, _) = _getDiagramBounds()
+        minX = temp1; minY = temp3
     }
 
     // Reposition the diagram now that it's appropriately scaled
@@ -176,9 +133,9 @@ fun _getDiagramBounds(): Quadruple<Float, Float, Float, Float>{
         val v3 = panel.getV3()
 
         minX = minOf(listOf(minX, panel.position.first, v2.first, v3.first))
-        maxX = maxOf(listOf(minX, panel.position.first, v2.first, v3.first))
+        maxX = maxOf(listOf(maxX, panel.position.first, v2.first, v3.first))
         minY = minOf(listOf(minY, panel.position.second, v2.second, v3.second))
-        maxY = maxOf(listOf(minY, panel.position.second, v2.second, v3.second))
+        maxY = maxOf(listOf(maxY, panel.position.second, v2.second, v3.second))
     }
     return Quadruple(minX, maxX, minY, maxY)
 }
