@@ -1,5 +1,6 @@
 package com.example.nanoleafdiy
 
+import android.graphics.Color
 import android.graphics.Path
 
 /**
@@ -18,6 +19,8 @@ class Panel {
     // The angle, measured clockwise from East, that points toward vertex 2
     var angle: Float = 0f
 
+    var color: Int = Color.GREEN
+
     /** Computes the position of the bottom-right vertex */
     fun getV2(): Vertex = Pair(
         position.first + PANEL_SCALE * cosD(angle),
@@ -29,6 +32,18 @@ class Panel {
         position.first + PANEL_SCALE * cosD(-60f + angle),
         position.second + PANEL_SCALE * sinD(-60f + angle)
     )
+
+    /** Tests if the given xy point is contained in the triangle */
+    fun contains(x: Float, y: Float): Boolean {
+        val collisionPath = Path()
+        collisionPath.moveTo(x, y)
+        collisionPath.lineTo(x+1, y)
+        collisionPath.lineTo(x+1, y+1)
+        collisionPath.lineTo(x, y)
+
+        collisionPath.op(getPath(), Path.Op.INTERSECT)
+        return !collisionPath.isEmpty
+    }
 
     /**
      * Returns a Path object using the triangle's
