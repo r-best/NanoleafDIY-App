@@ -1,13 +1,13 @@
 package com.example.nanoleafdiy
 
+import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
+import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.appcompat.widget.AppCompatImageView
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,12 +18,32 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        val networkDiagram: ImageView = findViewById(R.id.network_diagram)
-        networkDiagram.setImageDrawable(NetworkDiagram())
-        getPanelArrangement()
+        val layout: ConstraintLayout = findViewById(R.id.page_container)
+        layout.removeAllViews()
+        layout.addView(NetworkDiagramView(this).apply {
+            layoutParams = ConstraintLayout.LayoutParams(
+                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                ConstraintLayout.LayoutParams.MATCH_PARENT
+            )
+        })
     }
 
-    class NetworkDiagram : Drawable() {
+    class NetworkDiagramView @JvmOverloads constructor(
+        context: Context,
+        attrs: AttributeSet? = null,
+        defStyle: Int = 0
+    ): AppCompatImageView(context, attrs, defStyle) {
+        private val networkDiagram: NetworkDiagramDrawable = NetworkDiagramDrawable()
+
+        override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+            super.onLayout(changed, left, top, right, bottom)
+            setImageDrawable(networkDiagram)
+            computeNetworkTopology()
+            adjustPosition(width, height)
+        }
+    }
+
+    class NetworkDiagramDrawable : Drawable() {
         override fun draw(canvas: Canvas) {
             val strokePaint: Paint = Paint().apply {
                 strokeWidth = 5F
