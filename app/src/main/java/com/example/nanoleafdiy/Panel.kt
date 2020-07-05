@@ -19,7 +19,7 @@ class Panel {
     // The angle, measured clockwise from East, that points toward vertex 2
     var angle: Float = 0f
 
-    var color: Int = Color.GREEN
+    var selected: Boolean = false
 
     /** Computes the position of the bottom-right vertex */
     fun getV2(): Vertex = Pair(
