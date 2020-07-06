@@ -5,12 +5,19 @@ import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.fragment.app.Fragment
+
 
 class MainActivity : AppCompatActivity() {
+    var activeDetailsFragment: DetailsFragment? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -19,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        val layout: LinearLayout = findViewById(R.id.network_diagram_container)
+        val layout: ConstraintLayout = findViewById(R.id.network_diagram_container)
         layout.addView(NetworkDiagramView(this).apply {
             layoutParams = ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
@@ -28,56 +35,20 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    class NetworkDiagramView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyle: Int = 0
-    ): AppCompatImageView(context, attrs, defStyle) {
-        private var noneSelected: Boolean = true
+    fun openDetailsFragment(panel: Panel){
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        if(activeDetailsFragment != null)
+            fragmentTransaction.remove(activeDetailsFragment!!)
+        activeDetailsFragment = DetailsFragment(panel)
+        fragmentTransaction.add(R.id.details_container, activeDetailsFragment!!)
+        fragmentTransaction.commit()
+    }
 
-        private val strokePaint: Paint = Paint().apply {
-            strokeWidth = 5F
-            color = Color.BLACK
-            style = Paint.Style.STROKE
-        }
-        private var fillPaint: Paint = Paint().apply {
-            strokeWidth = 5F
-            color = Color.RED
-            style = Paint.Style.FILL
-        }
-
-        override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-            super.onLayout(changed, left, top, right, bottom)
-            computeNetworkTopology()
-            adjustPosition(width, height)
-        }
-
-        override fun onTouchEvent(event: MotionEvent): Boolean {
-            noneSelected = true
-            for(panel in panels)
-                if(panel.contains(event.x, event.y)) {
-                    panel.selected = true
-                    noneSelected = false
-                }
-                else panel.selected = false
-            invalidate()
-            return super.onTouchEvent(event)
-        }
-
-        override fun onDraw(canvas: Canvas) {
-            super.onDraw(canvas)
-
-            fillPaint.alpha = if(noneSelected) 255 else 100
-
-            for(panel in panels) {
-                if(panel.selected) fillPaint.alpha = 255
-
-                val path = panel.getPath()
-                canvas.drawPath(path, strokePaint)
-                canvas.drawPath(path, fillPaint)
-
-                if(panel.selected) fillPaint.alpha = 100
-            }
+    fun closeDetailsFragment(){
+        if(activeDetailsFragment != null) {
+            val fragmentTransaction = supportFragmentManager.beginTransaction()
+            fragmentTransaction.remove(activeDetailsFragment!!)
+            fragmentTransaction.commit()
         }
     }
 }
