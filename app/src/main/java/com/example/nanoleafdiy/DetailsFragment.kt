@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import com.example.nanoleafdiy.databinding.FragmentDetailsBinding
 
 class DetailsFragment constructor(var panel: Panel): Fragment() {
     override fun onCreateView(
@@ -12,6 +15,13 @@ class DetailsFragment constructor(var panel: Panel): Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_details, container, false)
+        val binding: FragmentDetailsBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.fragment_details,
+            container,
+            false
+        )
+        binding.panel = panel
+        return binding.root
     }
 }
