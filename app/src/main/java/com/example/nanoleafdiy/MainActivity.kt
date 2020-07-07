@@ -1,22 +1,13 @@
 package com.example.nanoleafdiy
 
-import android.content.Context
-import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.fragment.app.Fragment
 
 
 class MainActivity : AppCompatActivity() {
-    var activeDetailsFragment: DetailsFragment? = null
+    lateinit var networkDiagramView: NetworkDiagramView
+    private var activeDetailsFragment: DetailsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,13 +17,18 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        val layout: ConstraintLayout = findViewById(R.id.network_diagram_container)
-        layout.addView(NetworkDiagramView(this).apply {
+        networkDiagramView = NetworkDiagramView(this).apply {
             layoutParams = ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.MATCH_PARENT
             )
-        })
+        }
+
+        findViewById<ConstraintLayout>(R.id.network_diagram_container).addView(networkDiagramView)
+    }
+
+    fun redrawDiagram(){
+        networkDiagramView.invalidate()
     }
 
     fun openDetailsFragment(panel: Panel){

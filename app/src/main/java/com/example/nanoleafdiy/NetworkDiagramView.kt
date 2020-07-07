@@ -1,16 +1,12 @@
 package com.example.nanoleafdiy
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.fragment.app.FragmentManager
 
 class NetworkDiagramView @JvmOverloads constructor(
     context: Context,
@@ -58,16 +54,22 @@ class NetworkDiagramView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        fillPaint.alpha = if(selectedPanel == null) 255 else 100
-
         for(panel in panels) {
-            if(panel.selected) fillPaint.alpha = 255
+            if(panel.selected){
+                strokePaint.strokeWidth = 10f
+                strokePaint.color = Color.GRAY
+            }
+
+            fillPaint.color = Color.rgb(panel.r, panel.g, panel.b)
 
             val path = panel.getPath()
-            canvas.drawPath(path, strokePaint)
             canvas.drawPath(path, fillPaint)
+            canvas.drawPath(path, strokePaint)
 
-            if(panel.selected) fillPaint.alpha = 100
+            if(panel.selected){
+                strokePaint.strokeWidth = 5f
+                strokePaint.color = Color.BLACK
+            }
         }
     }
 }

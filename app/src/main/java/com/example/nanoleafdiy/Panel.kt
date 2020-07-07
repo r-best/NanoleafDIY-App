@@ -1,6 +1,5 @@
 package com.example.nanoleafdiy
 
-import android.graphics.Color
 import android.graphics.Path
 
 /**
@@ -19,7 +18,11 @@ class Panel {
     // The angle, measured clockwise from East, that points toward vertex 2
     var angle: Float = 0f
 
+    // Used on the panel network display, indicates if this panel was clicked by the user
     var selected: Boolean = false
+    var r: Int = 255
+    var g: Int = 255
+    var b: Int = 255
 
     /** Computes the position of the bottom-right vertex */
     fun getV2(): Vertex = Pair(
