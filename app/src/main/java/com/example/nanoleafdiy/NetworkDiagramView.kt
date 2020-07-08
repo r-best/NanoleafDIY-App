@@ -28,8 +28,11 @@ class NetworkDiagramView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        computeNetworkTopology()
-        adjustPosition(width, height)
+        ApiService.getNetworkTopology(fun(result: String){
+            computeNetworkTopology(result)
+            adjustPosition(width, height)
+            invalidate()
+        })
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
