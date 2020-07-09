@@ -44,6 +44,7 @@ class DetailsFragment constructor(var panel: Panel): Fragment() {
             panel.g = colorPicker.green
             panel.b = colorPicker.blue
 
+            ApiService.setColor(panel)
             (context as MainActivity).redrawDiagram()
             binding.invalidateAll()
 
