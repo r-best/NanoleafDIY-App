@@ -127,6 +127,7 @@ fun _getDiagramBounds(): Quadruple<Float, Float, Float, Float>{
     var maxX: Float = panels[0].position.first
     var minY: Float = panels[0].position.second
     var maxY: Float = panels[0].position.second
+    // Go through each panel in the list and check if any of its vertices are a new min or max
     for(panel in panels){
         val v2 = panel.getV2()
         val v3 = panel.getV3()
@@ -136,5 +137,21 @@ fun _getDiagramBounds(): Quadruple<Float, Float, Float, Float>{
         minY = minOf(listOf(minY, panel.position.second, v2.second, v3.second))
         maxY = maxOf(listOf(maxY, panel.position.second, v2.second, v3.second))
     }
+
+    // This is a mess of trigonometry, but just know that it's accounting for the little controller
+    // box drawn on the edge of the first panel, we don't want that to get drawn out of frame
+    val controllerV1 = Vertex(
+        panels[0].position.first + (PANEL_SCALE / 2.5f * cosD(panels[0].angle)) + (PANEL_SCALE / 15f * sinD(-panels[0].angle)),
+        panels[0].position.second + (PANEL_SCALE / 2.5f * sinD(panels[0].angle)) + (PANEL_SCALE / 15f * cosD(-panels[0].angle))
+    )
+    val controllerV2 = Vertex(
+        controllerV1.first + (PANEL_SCALE / 5 * cosD(panels[0].angle)),
+        controllerV1.second + (PANEL_SCALE / 5 * sinD(panels[0].angle))
+    )
+    minX = minOf(listOf(minX, controllerV1.first, controllerV2.first))
+    maxX = maxOf(listOf(maxX, controllerV1.first, controllerV2.first))
+    minY = minOf(listOf(minY, controllerV1.second, controllerV2.second))
+    maxY = maxOf(listOf(maxY, controllerV1.second, controllerV2.second))
+
     return Quadruple(minX, maxX, minY, maxY)
 }

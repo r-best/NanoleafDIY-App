@@ -4,9 +4,11 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatImageView
+import kotlin.math.acos
 
 class NetworkDiagramView @JvmOverloads constructor(
     context: Context,
@@ -57,6 +59,21 @@ class NetworkDiagramView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
+        // Draw controller connected to first panel
+        if(panels.size > 0) {
+            val controllerPath = Path()
+            controllerPath.moveTo(
+                panels[0].position.first + (PANEL_SCALE / 2.5f * cosD(panels[0].angle)),
+                panels[0].position.second + (PANEL_SCALE / 2.5f * sinD(panels[0].angle))
+            )
+            controllerPath.rLineTo(PANEL_SCALE / 15 * sinD(-panels[0].angle), PANEL_SCALE / 15 * cosD(-panels[0].angle))
+            controllerPath.rLineTo(PANEL_SCALE / 5 * cosD(panels[0].angle), PANEL_SCALE / 5 * sinD(panels[0].angle))
+            controllerPath.rLineTo(-PANEL_SCALE / 15 * sinD(-panels[0].angle), -PANEL_SCALE / 15 * cosD(-panels[0].angle))
+            fillPaint.color = Color.BLACK
+            canvas.drawPath(controllerPath, fillPaint)
+        }
+
+        // Draw all panels
         for(panel in panels) {
             if(panel.selected){
                 strokePaint.strokeWidth = 10f
