@@ -1,4 +1,4 @@
-package com.example.nanoleafdiy
+package com.example.nanoleafdiy.activities
 
 import android.graphics.Color
 import android.os.Bundle
@@ -10,9 +10,8 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.example.nanoleafdiy.ApiService
-import com.example.nanoleafdiy.MainActivity
-import com.example.nanoleafdiy.Panel
+import com.example.nanoleafdiy.utils.ApiService
+import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.R
 import com.example.nanoleafdiy.databinding.FragmentDetailsBinding
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker

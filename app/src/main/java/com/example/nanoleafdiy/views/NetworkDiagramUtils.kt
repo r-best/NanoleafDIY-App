@@ -1,5 +1,7 @@
-package com.example.nanoleafdiy
+package com.example.nanoleafdiy.views
 
+import com.example.nanoleafdiy.utils.Panel
+import com.example.nanoleafdiy.utils.Quadruple
 import kotlin.math.*
 import java.util.Collections.max as maxOf
 import java.util.Collections.min as minOf
@@ -45,7 +47,8 @@ fun parseNetworkTopology(tree: String){
         // On an open parenthesis, we add a new panel to the left or right,
         // depending on the value of `nextIsRight`
         if(tree[i] == '('){
-            val child: Panel = Panel().apply { parent = active }
+            val child: Panel = Panel()
+                .apply { parent = active }
             // If we're adding a panel to the right, its position vertex is
             // this panel's top vertex, and it's rotated 60 degrees clockwise
             if(nextIsRight){
@@ -87,7 +90,7 @@ fun adjustPosition(boundsX: Int, boundsY: Int){
 
     // Compute what scaling factor we need to make the diagram fill the screen,
     // with a small bit of padding on the edges
-    val scaleFactor = min((boundsX - PADDING*2) / (maxX - minX), (boundsY - PADDING*2) / (maxY - minY))
+    val scaleFactor = min((boundsX - PADDING *2) / (maxX - minX), (boundsY - PADDING *2) / (maxY - minY))
     if(scaleFactor != 1f){
         // Adjust the scale of the diagram
         PANEL_SCALE = (PANEL_SCALE * scaleFactor).toInt()
@@ -140,12 +143,24 @@ fun _getDiagramBounds(): Quadruple<Float, Float, Float, Float> {
     // This is a mess of trigonometry, but just know that it's accounting for the little controller
     // box drawn on the edge of the first panel, we don't want that to get drawn out of frame
     val controllerV1 = Vertex(
-        panels[0].position.first + (PANEL_SCALE / 2.5f * cosD(panels[0].angle)) + (PANEL_SCALE / 15f * sinD(-panels[0].angle)),
-        panels[0].position.second + (PANEL_SCALE / 2.5f * sinD(panels[0].angle)) + (PANEL_SCALE / 15f * cosD(-panels[0].angle))
+        panels[0].position.first + (PANEL_SCALE / 2.5f * cosD(
+            panels[0].angle
+        )) + (PANEL_SCALE / 15f * sinD(
+            -panels[0].angle
+        )),
+        panels[0].position.second + (PANEL_SCALE / 2.5f * sinD(
+            panels[0].angle
+        )) + (PANEL_SCALE / 15f * cosD(
+            -panels[0].angle
+        ))
     )
     val controllerV2 = Vertex(
-        controllerV1.first + (PANEL_SCALE / 5 * cosD(panels[0].angle)),
-        controllerV1.second + (PANEL_SCALE / 5 * sinD(panels[0].angle))
+        controllerV1.first + (PANEL_SCALE / 5 * cosD(
+            panels[0].angle
+        )),
+        controllerV1.second + (PANEL_SCALE / 5 * sinD(
+            panels[0].angle
+        ))
     )
     minX = minOf(listOf(minX, controllerV1.first, controllerV2.first))
     maxX = maxOf(listOf(maxX, controllerV1.first, controllerV2.first))

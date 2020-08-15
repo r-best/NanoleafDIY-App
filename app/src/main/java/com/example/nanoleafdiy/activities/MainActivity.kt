@@ -1,8 +1,12 @@
-package com.example.nanoleafdiy
+package com.example.nanoleafdiy.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.nanoleafdiy.*
+import com.example.nanoleafdiy.utils.ApiService
+import com.example.nanoleafdiy.utils.Panel
+import com.example.nanoleafdiy.views.NetworkDiagramView
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,7 +23,9 @@ class MainActivity : AppCompatActivity() {
 
         ApiService.init(this)
 
-        networkDiagramView = NetworkDiagramView(this).apply {
+        networkDiagramView = NetworkDiagramView(
+            this
+        ).apply {
             layoutParams = ConstraintLayout.LayoutParams(
                 ConstraintLayout.LayoutParams.MATCH_PARENT,
                 ConstraintLayout.LayoutParams.MATCH_PARENT
@@ -37,7 +43,8 @@ class MainActivity : AppCompatActivity() {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         if(activeDetailsFragment != null)
             fragmentTransaction.remove(activeDetailsFragment!!)
-        activeDetailsFragment = DetailsFragment(panel)
+        activeDetailsFragment =
+            DetailsFragment(panel)
         fragmentTransaction.add(R.id.details_container, activeDetailsFragment!!)
         fragmentTransaction.commit()
     }

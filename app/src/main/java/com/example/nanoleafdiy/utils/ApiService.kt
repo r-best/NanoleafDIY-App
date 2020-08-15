@@ -1,9 +1,8 @@
-package com.example.nanoleafdiy
+package com.example.nanoleafdiy.utils
 
 import android.content.Context
 import android.widget.Toast
 import com.google.gson.JsonElement
-import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import retrofit2.Call
 import retrofit2.Callback
@@ -13,7 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Path
 
 
 class ApiService { companion object {
@@ -46,23 +44,32 @@ class ApiService { companion object {
     }
 
     fun health(resolve: (Boolean) -> Unit){
-        api.health().enqueue(ResponseCallback(fun(res: JsonElement) {
-            resolve(true)
-        }))
+        api.health().enqueue(
+            ResponseCallback(
+                fun(res: JsonElement) {
+                    resolve(true)
+                })
+        )
     }
 
     fun getNetworkTopology(refresh: Boolean, resolve: (String) -> Unit){
         val op = if(refresh) api::getNetworkTopologyWithRefresh else api::getNetworkTopology
-        op().enqueue(ResponseCallback(fun(res: JsonElement) {
-            resolve(res.toString().substring(1,res.toString().length-1))
-        }))
+        op().enqueue(
+            ResponseCallback(
+            fun(res: JsonElement) {
+                resolve(res.toString().substring(1, res.toString().length - 1))
+            })
+        )
     }
 
     fun setColor(panel: Panel){
         val body = "{ \"directions\": \"%s\", \"r\": \"%03d\", \"g\": \"%03d\", \"b\": \"%03d\" }"
             .format(panel.directions, panel.r, panel.g, panel.b)
 
-        api.setColor(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement) {}))
+        api.setColor(JsonParser().parse(body)).enqueue(
+            ResponseCallback(
+                fun(_: JsonElement) {})
+        )
     }
 
     class ResponseCallback constructor(private val onRes: (JsonElement)->Unit): Callback<JsonElement>{
