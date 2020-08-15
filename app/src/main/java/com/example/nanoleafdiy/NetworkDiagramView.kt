@@ -8,7 +8,6 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatImageView
-import kotlin.math.acos
 
 class NetworkDiagramView @JvmOverloads constructor(
     context: Context,
@@ -75,6 +74,7 @@ class NetworkDiagramView @JvmOverloads constructor(
 
         // Draw all panels
         for(panel in panels) {
+            // If this panel is selected, highlight it with a different stroke color
             if(panel.selected){
                 strokePaint.strokeWidth = 10f
                 strokePaint.color = Color.GRAY
@@ -86,6 +86,7 @@ class NetworkDiagramView @JvmOverloads constructor(
             canvas.drawPath(path, fillPaint)
             canvas.drawPath(path, strokePaint)
 
+            // Change the stroke color back
             if(panel.selected){
                 strokePaint.strokeWidth = 5f
                 strokePaint.color = Color.BLACK

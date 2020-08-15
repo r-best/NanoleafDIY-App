@@ -1,18 +1,24 @@
 package com.example.nanoleafdiy
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.example.nanoleafdiy.ApiService
+import com.example.nanoleafdiy.MainActivity
+import com.example.nanoleafdiy.Panel
+import com.example.nanoleafdiy.R
 import com.example.nanoleafdiy.databinding.FragmentDetailsBinding
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker
 
 class DetailsFragment constructor(var panel: Panel): Fragment() {
-    lateinit var binding: FragmentDetailsBinding
+    private lateinit var binding: FragmentDetailsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,20 +37,20 @@ class DetailsFragment constructor(var panel: Panel): Fragment() {
     }
 
     override fun onStart() {
-        (context as MainActivity).findViewById<TextView>(R.id.hex_color).setOnClickListener(::launchColorPicker)
-
+        (context as MainActivity).findViewById<ConstraintLayout>(R.id.color_field).setOnClickListener(::launchColorPicker)
         super.onStart()
     }
 
-    fun launchColorPicker(v: View?){
+    private fun launchColorPicker(v: View?){
         val colorPicker = ColorPicker((context as MainActivity), panel.r, panel.g, panel.b)
         colorPicker.show()
-        colorPicker.findViewById<Button>(R.id.okColorButton).setOnClickListener(fun(v: View) {
+        colorPicker.findViewById<Button>(R.id.okColorButton).setOnClickListener(fun(_: View) {
             panel.r = colorPicker.red
             panel.g = colorPicker.green
             panel.b = colorPicker.blue
 
             ApiService.setColor(panel)
+            (context as MainActivity).findViewById<TextView>(R.id.color_text).compoundDrawables[0].setTint(Color.rgb(panel.r, panel.g, panel.b))
             (context as MainActivity).redrawDiagram()
             binding.invalidateAll()
 

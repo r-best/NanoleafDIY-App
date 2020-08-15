@@ -29,7 +29,6 @@ var PANEL_SCALE: Int = 10
  * Note: algorithm fails on empty left nodes, i.e. "...(X(..."
  */
 fun computeNetworkTopology(tree: String){
-    // Make request to panel controller, stub for now
 //    val tree: String = "(((XX)X)(X((XX)X)))"
 //    val tree: String = "()"
 //    val tree: String = "(XX)"
@@ -122,7 +121,7 @@ fun adjustPosition(boundsX: Int, boundsY: Int){
  * Computes the leftmost, rightmost, topmost, and bottommost
  * bounds of the network diagram, returning them in that order
  */
-fun _getDiagramBounds(): Quadruple<Float, Float, Float, Float>{
+fun _getDiagramBounds(): Quadruple<Float, Float, Float, Float> {
     var minX: Float = panels[0].position.first
     var maxX: Float = panels[0].position.first
     var minY: Float = panels[0].position.second
