@@ -56,7 +56,8 @@ class ApiService { companion object {
     }
 
     fun setColor(panel: Panel){
-        val body = "{ \"directions\": \"${panel.directions}\", \"r\": \"${panel.r}\", \"g\": \"${panel.g}\", \"b\": \"${panel.b}\" }"
+        val body = "{ \"directions\": \"%s\", \"r\": \"%03d\", \"g\": \"%03d\", \"b\": \"%03d\" }"
+            .format(panel.directions, panel.r, panel.g, panel.b)
 
         api.setColor(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement) {}))
     }
