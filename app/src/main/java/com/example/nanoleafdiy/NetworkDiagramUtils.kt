@@ -28,7 +28,7 @@ var PANEL_SCALE: Int = 10
  *
  * Note: algorithm fails on empty left nodes, i.e. "...(X(..."
  */
-fun computeNetworkTopology(tree: String){
+fun parseNetworkTopology(tree: String){
 //    val tree: String = "(((XX)X)(X((XX)X)))"
 //    val tree: String = "()"
 //    val tree: String = "(XX)"

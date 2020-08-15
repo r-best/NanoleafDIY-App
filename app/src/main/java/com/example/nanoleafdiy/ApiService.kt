@@ -18,14 +18,16 @@ import retrofit2.http.Path
 
 class ApiService { companion object {
     interface API {
-        @GET("")
-        fun health(): Call<JsonElement>
+        @GET("") fun health(): Call<JsonElement>
 
-        @GET("network")
-        fun getNetworkTopology(): Call<JsonElement>
+        /** Obtain the cached panel network configuration on the controller */
+        @GET("network") fun getNetworkTopology(): Call<JsonElement>
 
-        @POST("panels/color")
-        fun setColor(@Body body: JsonElement): Call<JsonElement>
+        /** Obtain the current panel network configuration, forcing the controller to recompute the network topology */
+        @GET("network/refresh") fun getNetworkTopologyWithRefresh(): Call<JsonElement>
+
+        /** Set the stored solid color state of a given panel */
+        @POST("panels/color") fun setColor(@Body body: JsonElement): Call<JsonElement>
     }
 
     // Static IP because I couldn't get Android to recognize mDNS :(
@@ -49,8 +51,9 @@ class ApiService { companion object {
         }))
     }
 
-    fun getNetworkTopology(resolve: (String) -> Unit){
-        api.getNetworkTopology().enqueue(ResponseCallback(fun(res: JsonElement) {
+    fun getNetworkTopology(refresh: Boolean, resolve: (String) -> Unit){
+        val op = if(refresh) api::getNetworkTopologyWithRefresh else api::getNetworkTopology
+        op().enqueue(ResponseCallback(fun(res: JsonElement) {
             resolve(res.toString().substring(1,res.toString().length-1))
         }))
     }
