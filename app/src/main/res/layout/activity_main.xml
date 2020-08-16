@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/page_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
     tools:context=".activities.MainActivity">
 
     <LinearLayout
@@ -20,10 +20,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
+            <com.example.nanoleafdiy.views.NetworkDiagramView
+                android:id="@+id/network_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/details_container"
+            android:id="@+id/details_container_outer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1" />

@@ -24,6 +24,9 @@ class ApiService { companion object {
         /** Obtain the current panel network configuration, forcing the controller to recompute the network topology */
         @GET("network/refresh") fun getNetworkTopologyWithRefresh(): Call<JsonElement>
 
+        /** Sets the active lighting mode of a given panel (solid color, gradient, rainbow, etc..) */
+        @POST("panels/mode") fun setMode(@Body body: JsonElement): Call<JsonElement>
+
         /** Set the stored solid color state of a given panel */
         @POST("panels/color") fun setColor(@Body body: JsonElement): Call<JsonElement>
     }
@@ -54,22 +57,22 @@ class ApiService { companion object {
 
     fun getNetworkTopology(refresh: Boolean, resolve: (String) -> Unit){
         val op = if(refresh) api::getNetworkTopologyWithRefresh else api::getNetworkTopology
-        op().enqueue(
-            ResponseCallback(
-            fun(res: JsonElement) {
-                resolve(res.toString().substring(1, res.toString().length - 1))
-            })
-        )
+        op().enqueue(ResponseCallback(fun(res: JsonElement){
+            resolve(res.toString().substring(1, res.toString().length - 1))
+        }))
+    }
+
+    fun setMode(panel: Panel){
+        val body = "{ \"directions\": \"%s\", \"mode\": \"%d\" }".format(panel.directions, panel.mode)
+
+        api.setMode(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
     }
 
     fun setColor(panel: Panel){
         val body = "{ \"directions\": \"%s\", \"r\": \"%03d\", \"g\": \"%03d\", \"b\": \"%03d\" }"
             .format(panel.directions, panel.r, panel.g, panel.b)
 
-        api.setColor(JsonParser().parse(body)).enqueue(
-            ResponseCallback(
-                fun(_: JsonElement) {})
-        )
+        api.setColor(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
     }
 
     class ResponseCallback constructor(private val onRes: (JsonElement)->Unit): Callback<JsonElement>{

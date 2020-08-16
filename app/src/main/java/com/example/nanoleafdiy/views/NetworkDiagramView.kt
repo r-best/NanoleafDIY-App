@@ -32,7 +32,7 @@ class NetworkDiagramView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        ApiService.getNetworkTopology(true, fun(result: String){
+        ApiService.getNetworkTopology(false, fun(result: String){
             parseNetworkTopology(result)
             adjustPosition(width, height)
             invalidate()

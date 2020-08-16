@@ -1,59 +1,73 @@
 package com.example.nanoleafdiy.activities
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import com.example.nanoleafdiy.utils.ApiService
+import androidx.fragment.app.FragmentTransaction
 import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.R
-import com.example.nanoleafdiy.databinding.FragmentDetailsBinding
-import com.pes.androidmaterialcolorpickerdialog.ColorPicker
+import com.example.nanoleafdiy.utils.ApiService
+import com.example.nanoleafdiy.utils.getPanel
 
-class DetailsFragment constructor(var panel: Panel): Fragment() {
-    private lateinit var binding: FragmentDetailsBinding
+/**
+ * This fragment sits on the main screen below the network diagram
+ * It is created when a user clicks on one of the panels in the network diagram, allowing
+ * the user to change the panel's settings
+ *
+ * Contains a child fragment depending on the current panel mode with mode-specific settings, i.e.:
+ *  - DetailsSolidFragment allows the user to choose a single color for the panel
+ *  - DetailsGradientFragment allows the user to choose a range of colors for the panel
+ *      to fade between, along with fade transition times
+ *  - DetailsChooseModeFragment is not tied to a real panel mode (uses -1) and lets the user
+ *      select a different mode
+ */
+class DetailsFragment : Fragment { constructor() : super()
+    constructor(directions: String) : super() {
+        arguments = Bundle().apply { putString("directions", directions) }
+    }
+    private lateinit var panel: Panel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_details,
-            container,
-            false
-        )
-        binding.panel = panel
+        panel = getPanel(arguments?.getString("directions")!!)!!
 
-        return binding.root
+        setPanelMode(panel.mode)
+
+        return inflater.inflate(R.layout.fragment_details, container, false)
     }
 
-    override fun onStart() {
-        (context as MainActivity).findViewById<ConstraintLayout>(R.id.color_field).setOnClickListener(::launchColorPicker)
-        super.onStart()
+    /**
+     * Called by the DetailsChooseModeFragment when the user selects a new mode, makes
+     * the API call to change the panel to that mode and switches the active fragment
+     * to reflect the change
+     *
+     * Also called by the fragments with a mode of -1 when the user presses the change
+     * mode button, this is just an indicator to swap to the change mode fragment and
+     * does not actually change the panel's mode
+     */
+    fun setPanelMode(mode: Int){
+        println("SET PANEL MODE %d".format(mode))
+        if(mode > -1 && mode != panel.mode){
+            panel.mode = mode
+            ApiService.setMode(panel)
+        }
+        when(mode){
+            -1 -> swapFragment(DetailsChooseModeFragment())
+            0 -> swapFragment(DetailsSolidFragment(panel.directions))
+            1 -> swapFragment(DetailsGradientFragment(panel.directions))
+            else -> swapFragment(DetailsNoSettingsFragment())
+        }
     }
 
-    private fun launchColorPicker(v: View?){
-        val colorPicker = ColorPicker((context as MainActivity), panel.r, panel.g, panel.b)
-        colorPicker.show()
-        colorPicker.findViewById<Button>(R.id.okColorButton).setOnClickListener(fun(_: View) {
-            panel.r = colorPicker.red
-            panel.g = colorPicker.green
-            panel.b = colorPicker.blue
-
-            ApiService.setColor(panel)
-            (context as MainActivity).findViewById<TextView>(R.id.color_text).compoundDrawables[0].setTint(Color.rgb(panel.r, panel.g, panel.b))
-            (context as MainActivity).redrawDiagram()
-            binding.invalidateAll()
-
-            colorPicker.dismiss()
-        })
+    private fun swapFragment(fragment: Fragment){
+        println(fragment)
+        childFragmentManager.beginTransaction()
+            .replace(R.id.details_container_inner, fragment)
+            .commit()
     }
 }

@@ -7,8 +7,8 @@ import com.example.nanoleafdiy.views.cosD
 import com.example.nanoleafdiy.views.sinD
 
 /**
- * Holds all the information of a Panel, including its coordinates,
- * rotation angle, and references to its neighboring Panels
+ * Holds all the information needed to draw a Panel on the network diagram, including
+ * its coordinates, rotation angle, and references to its neighbors
  */
 class Panel {
     // Navigation directions that the controller uses to send instructions to a particular panel
@@ -24,28 +24,22 @@ class Panel {
 
     // Used on the panel network display, indicates if this panel was clicked by the user
     var selected: Boolean = false
+
+    var mode: Int = -1 // Active lighting mode, 0 is solid color, 1 is gradient, 2 rainbow, etc..
     var r: Int = 255
     var g: Int = 255
     var b: Int = 255
 
     /** Computes the position of the bottom-right vertex */
     fun getV2(): Vertex = Pair(
-        position.first + PANEL_SCALE * cosD(
-            angle
-        ),
-        position.second + PANEL_SCALE * sinD(
-            angle
-        )
+        position.first + PANEL_SCALE * cosD(angle),
+        position.second + PANEL_SCALE * sinD(angle)
     )
 
     /** Computes the position of the top vertex */
     fun getV3(): Vertex = Pair(
-        position.first + PANEL_SCALE * cosD(
-            -60f + angle
-        ),
-        position.second + PANEL_SCALE * sinD(
-            -60f + angle
-        )
+        position.first + PANEL_SCALE * cosD(-60f + angle),
+        position.second + PANEL_SCALE * sinD(-60f + angle)
     )
 
     /** Tests if the given xy point is contained in the triangle */
