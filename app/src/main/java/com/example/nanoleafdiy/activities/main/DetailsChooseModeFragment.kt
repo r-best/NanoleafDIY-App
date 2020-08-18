@@ -1,19 +1,12 @@
-package com.example.nanoleafdiy.activities
+package com.example.nanoleafdiy.activities.main
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import com.example.nanoleafdiy.R
-import com.example.nanoleafdiy.databinding.FragmentDetailsSolidBinding
-import com.example.nanoleafdiy.utils.ApiService
-import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.utils.SquareImageView
 import com.example.nanoleafdiy.utils.getPanel
 
@@ -42,6 +35,7 @@ class DetailsChooseModeFragment: Fragment() {
         registerListener(R.id.modeSelect_gradient, 1)
         registerListener(R.id.modeSelect_rainbow, 2)
         registerListener(R.id.modeSelect_theaterchase, 3)
+        registerListener(R.id.modeSelect_theaterchaserainbow, 4)
         super.onStart()
     }
 }

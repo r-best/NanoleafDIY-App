@@ -9,7 +9,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatImageView
 import com.example.nanoleafdiy.utils.Panel
-import com.example.nanoleafdiy.activities.MainActivity
+import com.example.nanoleafdiy.activities.main.MainActivity
 import com.example.nanoleafdiy.utils.ApiService
 
 class NetworkDiagramView @JvmOverloads constructor(
@@ -32,29 +32,27 @@ class NetworkDiagramView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        ApiService.getNetworkTopology(false, fun(result: String){
+        ApiService.getNetworkTopology(true, fun(result: String){
             parseNetworkTopology(result)
+            for(panel in panels)
+                ApiService.getPanelState(panel){ invalidate() }
             adjustPosition(width, height)
             invalidate()
         })
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        selectedPanel = null
         for(panel in panels) {
             if (panel.contains(event.x, event.y)) {
-                panel.selected = true
-                selectedPanel = panel
-            }
-            else {
-                panel.selected = false
+                if(panel != selectedPanel){
+                    selectedPanel = panel
+                    (context as MainActivity).openDetailsFragment(selectedPanel!!)
+                    invalidate()
+                }
+                return super.onTouchEvent(event)
             }
         }
-        if(selectedPanel != null)
-            (context as MainActivity).openDetailsFragment(selectedPanel!!)
-        else
-            (context as MainActivity).closeDetailsFragment()
-        invalidate()
+        (context as MainActivity).closeDetailsFragment()
         return super.onTouchEvent(event)
     }
 
@@ -65,33 +63,12 @@ class NetworkDiagramView @JvmOverloads constructor(
         if(panels.size > 0) {
             val controllerPath = Path()
             controllerPath.moveTo(
-                panels[0].position.first + (PANEL_SCALE / 2.5f * cosD(
-                    panels[0].angle
-                )),
-                panels[0].position.second + (PANEL_SCALE / 2.5f * sinD(
-                    panels[0].angle
-                ))
+                panels[0].position.first + (PANEL_SCALE / 2.5f * cosD(panels[0].angle)),
+                panels[0].position.second + (PANEL_SCALE / 2.5f * sinD(panels[0].angle))
             )
-            controllerPath.rLineTo(
-                PANEL_SCALE / 15 * sinD(
-                    -panels[0].angle
-                ), PANEL_SCALE / 15 * cosD(
-                    -panels[0].angle
-                )
-            )
-            controllerPath.rLineTo(
-                PANEL_SCALE / 5 * cosD(
-                    panels[0].angle
-                ), PANEL_SCALE / 5 * sinD(
-                    panels[0].angle
-                )
-            )
-            controllerPath.rLineTo(-PANEL_SCALE / 15 * sinD(
-                -panels[0].angle
-            ), -PANEL_SCALE / 15 * cosD(
-                -panels[0].angle
-            )
-            )
+            controllerPath.rLineTo(PANEL_SCALE / 15 * sinD(-panels[0].angle), PANEL_SCALE / 15 * cosD(-panels[0].angle))
+            controllerPath.rLineTo(PANEL_SCALE / 5 * cosD(panels[0].angle), PANEL_SCALE / 5 * sinD(panels[0].angle))
+            controllerPath.rLineTo(-PANEL_SCALE / 15 * sinD(-panels[0].angle), -PANEL_SCALE / 15 * cosD(-panels[0].angle))
             fillPaint.color = Color.BLACK
             canvas.drawPath(controllerPath, fillPaint)
         }
@@ -99,19 +76,22 @@ class NetworkDiagramView @JvmOverloads constructor(
         // Draw all panels
         for(panel in panels) {
             // If this panel is selected, highlight it with a different stroke color
-            if(panel.selected){
+            if(panel == selectedPanel){
                 strokePaint.strokeWidth = 10f
                 strokePaint.color = Color.GRAY
             }
 
-            fillPaint.color = Color.rgb(panel.r, panel.g, panel.b)
+            if(panel.mode == 0)
+                fillPaint.color = Color.rgb(panel.r, panel.g, panel.b)
+            else
+                fillPaint.color = Color.rgb(255, 255, 255)
 
             val path = panel.getPath()
             canvas.drawPath(path, fillPaint)
             canvas.drawPath(path, strokePaint)
 
             // Change the stroke color back
-            if(panel.selected){
+            if(panel == selectedPanel){
                 strokePaint.strokeWidth = 5f
                 strokePaint.color = Color.BLACK
             }

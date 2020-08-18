@@ -1,11 +1,10 @@
-package com.example.nanoleafdiy.activities
+package com.example.nanoleafdiy.activities.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.R
 import com.example.nanoleafdiy.utils.ApiService
@@ -55,12 +54,13 @@ class DetailsFragment : Fragment { constructor() : super()
         if(mode > -1 && mode != panel.mode){
             panel.mode = mode
             ApiService.setMode(panel)
+            (context as MainActivity).redrawDiagram()
         }
         when(mode){
             -1 -> swapFragment(DetailsChooseModeFragment())
             0 -> swapFragment(DetailsSolidFragment(panel.directions))
             1 -> swapFragment(DetailsGradientFragment(panel.directions))
-            else -> swapFragment(DetailsNoSettingsFragment())
+            else -> swapFragment(DetailsNoSettingsFragment(panel.directions))
         }
     }
 

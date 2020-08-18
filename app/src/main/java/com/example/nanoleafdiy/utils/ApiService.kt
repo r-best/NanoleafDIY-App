@@ -24,6 +24,9 @@ class ApiService { companion object {
         /** Obtain the current panel network configuration, forcing the controller to recompute the network topology */
         @GET("network/refresh") fun getNetworkTopologyWithRefresh(): Call<JsonElement>
 
+        /** Retrieve the current state of a panel, including its active mode and any settings related to that mode */
+        @POST("panels/state") fun getPanelState(@Body body: JsonElement): Call<JsonElement>
+
         /** Sets the active lighting mode of a given panel (solid color, gradient, rainbow, etc..) */
         @POST("panels/mode") fun setMode(@Body body: JsonElement): Call<JsonElement>
 
@@ -62,9 +65,39 @@ class ApiService { companion object {
         }))
     }
 
+    fun getPanelState(panel: Panel, cb: (() -> Unit)?){
+        val body = "{ \"directions\": \"%s\" }".format(panel.directions)
+        println(body)
+        api.getPanelState(JsonParser().parse(body)).enqueue(ResponseCallback(fun(res: JsonElement){
+            val state = res.toString().substring(1, res.toString().length - 1)
+            panel.mode = state.substring(0, 1).toInt()
+            println("MODE %s".format(panel.mode))
+
+            when(panel.mode){
+                0 -> {
+                    panel.r = state.substring(1, 3).toInt(16)
+                    panel.g = state.substring(3, 5).toInt(16)
+                    panel.b = state.substring(5, 7).toInt(16)
+                }
+                1 -> {
+                    panel.rs = mutableListOf()
+                    panel.gs = mutableListOf()
+                    panel.bs = mutableListOf()
+                    panel.transitions = mutableListOf()
+                    for(i in 1 until state.length step 10){
+                        panel.rs.add(state.substring(1, 3).toInt(16))
+                        panel.gs.add(state.substring(3, 5).toInt(16))
+                        panel.bs.add(state.substring(5, 7).toInt(16))
+                        panel.transitions.add(state.substring(7, 11).toInt())
+                    }
+                }
+            }
+            if(cb != null) cb()
+        }))
+    }
+
     fun setMode(panel: Panel){
         val body = "{ \"directions\": \"%s\", \"mode\": \"%d\" }".format(panel.directions, panel.mode)
-
         api.setMode(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
     }
 

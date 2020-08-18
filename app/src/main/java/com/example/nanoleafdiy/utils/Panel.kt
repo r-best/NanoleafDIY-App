@@ -17,18 +17,28 @@ class Panel {
     var left: Panel? = null
     var right: Panel? = null
 
+    var mode: Int = -1 // Active lighting mode, 0 is solid color, 1 is gradient, 2 rainbow, etc..
+
+    var statesInitialized = mutableListOf(false, false, false, false, false)
+
+    // Data for mode 0 (Solid color)
+    var r: Int = 255
+    var g: Int = 255
+    var b: Int = 255
+
+    // Data for mode 1 (custom gradient)
+    var rs = mutableListOf<Int>()
+    var gs = mutableListOf<Int>()
+    var bs = mutableListOf<Int>()
+    var transitions = mutableListOf<Int>()
+
+    /*-----------------------------------------------------
+     ---------Utilities for drawing network diagram--------
+     ------------------------------------------------------*/
     // The coordinates of the bottom-left vertex of the triangle
     var position: Vertex = Pair(0f, 0f)
     // The angle, measured clockwise from East, that points toward vertex 2
     var angle: Float = 0f
-
-    // Used on the panel network display, indicates if this panel was clicked by the user
-    var selected: Boolean = false
-
-    var mode: Int = -1 // Active lighting mode, 0 is solid color, 1 is gradient, 2 rainbow, etc..
-    var r: Int = 255
-    var g: Int = 255
-    var b: Int = 255
 
     /** Computes the position of the bottom-right vertex */
     fun getV2(): Vertex = Pair(

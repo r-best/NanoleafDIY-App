@@ -1,4 +1,4 @@
-package com.example.nanoleafdiy.activities
+package com.example.nanoleafdiy.activities.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +9,6 @@ import com.example.nanoleafdiy.views.NetworkDiagramView
 
 
 class MainActivity : AppCompatActivity() {
-    private var activeDetailsFragment: DetailsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +17,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
         ApiService.init(this)
     }
 
@@ -27,18 +25,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun openDetailsFragment(panel: Panel){
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        if(activeDetailsFragment != null)
-            fragmentTransaction.remove(activeDetailsFragment!!)
-        activeDetailsFragment = DetailsFragment(panel.directions)
-        fragmentTransaction.add(R.id.details_container_outer, activeDetailsFragment!!)
-        fragmentTransaction.commit()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.details_container_outer, DetailsFragment(panel.directions))
+            .commit()
     }
 
     fun closeDetailsFragment(){
-        if(activeDetailsFragment != null)
-            supportFragmentManager.beginTransaction()
-                .remove(activeDetailsFragment!!)
-                .commit()
+        val fragment = supportFragmentManager.findFragmentById(R.id.details_container_outer)
+        if(fragment != null) supportFragmentManager.beginTransaction().remove(fragment).commit()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.nanoleafdiy.activities
+package com.example.nanoleafdiy.activities.main
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,18 +13,20 @@ import com.example.nanoleafdiy.R
  * Use the [DetailsNoSettingsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DetailsNoSettingsFragment : Fragment() {
+class DetailsNoSettingsFragment(directions: String): DetailsSettingsFragmentBase(directions) {
+    override val INDEX: Int = 2
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_details_nosettings, container, false)
+        super.create(inflater, R.layout.fragment_details_nosettings, container)
+        return binding.root
     }
 
     override fun onStart() {
-        (context as MainActivity).findViewById<Button>(R.id.nosettings_switchmode_button).setOnClickListener{(parentFragment as DetailsFragment).setPanelMode(-1)}
+        super.start(R.id.nosettings_switchmode_button)
         super.onStart()
     }
 }
