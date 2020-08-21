@@ -19,8 +19,11 @@ import com.pes.androidmaterialcolorpickerdialog.ColorPicker
  * Use the [DetailsSolidFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DetailsSolidFragment(directions: String) : DetailsSettingsFragmentBase(directions) {
+class DetailsSolidFragment : DetailsSettingsFragmentBase {
     override val INDEX: Int = 0
+
+    constructor() : super()
+    constructor(directions: String): super(directions)
 
     override fun onCreateView(
         inflater: LayoutInflater,

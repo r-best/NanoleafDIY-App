@@ -27,10 +27,7 @@ class Panel {
     var b: Int = 255
 
     // Data for mode 1 (custom gradient)
-    var rs = mutableListOf<Int>()
-    var gs = mutableListOf<Int>()
-    var bs = mutableListOf<Int>()
-    var transitions = mutableListOf<Int>()
+    var gradientSteps = mutableListOf<GradientStep>()
 
     /*-----------------------------------------------------
      ---------Utilities for drawing network diagram--------
@@ -79,3 +76,5 @@ class Panel {
         return path
     }
 }
+
+class GradientStep(var r: Int, var g: Int, var b: Int, var t: Int)

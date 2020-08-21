@@ -13,8 +13,11 @@ import com.example.nanoleafdiy.R
  * Use the [DetailsNoSettingsFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DetailsNoSettingsFragment(directions: String): DetailsSettingsFragmentBase(directions) {
+class DetailsNoSettingsFragment: DetailsSettingsFragmentBase {
     override val INDEX: Int = 2
+
+    constructor() : super()
+    constructor(directions: String): super(directions)
 
     override fun onCreateView(
         inflater: LayoutInflater,

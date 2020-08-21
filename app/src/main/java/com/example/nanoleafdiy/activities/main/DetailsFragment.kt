@@ -65,7 +65,6 @@ class DetailsFragment : Fragment { constructor() : super()
     }
 
     private fun swapFragment(fragment: Fragment){
-        println(fragment)
         childFragmentManager.beginTransaction()
             .replace(R.id.details_container_inner, fragment)
             .commit()
