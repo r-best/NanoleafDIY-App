@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nanoleafdiy.R
-import com.example.nanoleafdiy.databinding.FragmentDetailsGradientBinding
 import com.example.nanoleafdiy.utils.ApiService
 import com.example.nanoleafdiy.utils.GradientStep
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker
@@ -29,6 +28,7 @@ import com.pes.androidmaterialcolorpickerdialog.ColorPicker
  * create an instance of this fragment.
  */
 class DetailsGradientFragment: DetailsSettingsFragmentBase {
+    override val LAYOUT: Int = R.layout.fragment_details_gradient
     override val INDEX: Int = 1
 
     constructor() : super()
@@ -38,16 +38,6 @@ class DetailsGradientFragment: DetailsSettingsFragmentBase {
     private lateinit var changes: MutableList<GradientStep>
 
     private lateinit var listAdapter: GradientSetAdapter
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        super.create(inflater, R.layout.fragment_details_gradient, container)
-        (binding as FragmentDetailsGradientBinding).panel = panel
-        return binding.root
-    }
 
     override fun onStart() {
         super.start(R.id.gradient_switchmode_button)
@@ -75,6 +65,10 @@ class DetailsGradientFragment: DetailsSettingsFragmentBase {
 
     override fun onResume() {
         super.onResume()
+        resetChanges()
+    }
+
+    override fun onPanelStateFetched() {
         resetChanges()
     }
 

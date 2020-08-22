@@ -52,7 +52,9 @@ class NetworkDiagramView @JvmOverloads constructor(
                 return super.onTouchEvent(event)
             }
         }
+        selectedPanel = null
         (context as MainActivity).closeDetailsFragment()
+        invalidate()
         return super.onTouchEvent(event)
     }
 

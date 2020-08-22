@@ -14,22 +14,16 @@ import com.example.nanoleafdiy.R
  * create an instance of this fragment.
  */
 class DetailsNoSettingsFragment: DetailsSettingsFragmentBase {
+    override val LAYOUT: Int = R.layout.fragment_details_nosettings
     override val INDEX: Int = 2
 
     constructor() : super()
     constructor(directions: String): super(directions)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        super.create(inflater, R.layout.fragment_details_nosettings, container)
-        return binding.root
-    }
-
     override fun onStart() {
         super.start(R.id.nosettings_switchmode_button)
         super.onStart()
     }
+
+    override fun onPanelStateFetched() {}
 }
