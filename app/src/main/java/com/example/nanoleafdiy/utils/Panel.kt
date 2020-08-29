@@ -1,10 +1,10 @@
 package com.example.nanoleafdiy.utils
 
 import android.graphics.Path
-import com.example.nanoleafdiy.views.PANEL_SCALE
-import com.example.nanoleafdiy.views.Vertex
-import com.example.nanoleafdiy.views.cosD
-import com.example.nanoleafdiy.views.sinD
+import com.example.nanoleafdiy.activities.main.networkdiagram.PANEL_SCALE
+import com.example.nanoleafdiy.activities.main.networkdiagram.Vertex
+import com.example.nanoleafdiy.activities.main.networkdiagram.cosD
+import com.example.nanoleafdiy.activities.main.networkdiagram.sinD
 
 /**
  * Holds all the information needed to draw a Panel on the network diagram, including
@@ -39,14 +39,22 @@ class Panel {
 
     /** Computes the position of the bottom-right vertex */
     fun getV2(): Vertex = Pair(
-        position.first + PANEL_SCALE * cosD(angle),
-        position.second + PANEL_SCALE * sinD(angle)
+        position.first + PANEL_SCALE * cosD(
+            angle
+        ),
+        position.second + PANEL_SCALE * sinD(
+            angle
+        )
     )
 
     /** Computes the position of the top vertex */
     fun getV3(): Vertex = Pair(
-        position.first + PANEL_SCALE * cosD(-60f + angle),
-        position.second + PANEL_SCALE * sinD(-60f + angle)
+        position.first + PANEL_SCALE * cosD(
+            -60f + angle
+        ),
+        position.second + PANEL_SCALE * sinD(
+            -60f + angle
+        )
     )
 
     /** Tests if the given xy point is contained in the triangle */

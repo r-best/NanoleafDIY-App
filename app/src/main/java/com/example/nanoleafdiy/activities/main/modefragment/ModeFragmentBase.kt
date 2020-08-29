@@ -1,24 +1,24 @@
-package com.example.nanoleafdiy.activities.main
+package com.example.nanoleafdiy.activities.main.modefragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.databinding.ViewDataBinding
-import com.example.nanoleafdiy.R
+import com.example.nanoleafdiy.activities.main.ModeDetailsFragment
+import com.example.nanoleafdiy.activities.main.MainActivity
 import com.example.nanoleafdiy.utils.ApiService
 import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.utils.getPanel
 
 /**
  * A simple [Fragment] subclass.
- * Use the [DetailsSettingsFragmentBase.newInstance] factory method to
+ * Use the [ModeFragmentBase.newInstance] factory method to
  * create an instance of this fragment.
  */
-abstract class DetailsSettingsFragmentBase : Fragment { constructor() : super()
+abstract class ModeFragmentBase : Fragment {
+    constructor() : super()
     constructor(directions: String) : super() {
         arguments = Bundle().apply { putString("directions", directions) }
     }
@@ -36,11 +36,13 @@ abstract class DetailsSettingsFragmentBase : Fragment { constructor() : super()
 
     protected fun start(resource: Int) {
         panel = getPanel(arguments?.getString("directions")!!)!!
-        (context as MainActivity).findViewById<Button>(resource).setOnClickListener{(parentFragment as DetailsFragment).setPanelMode(-1)}
+        (context as MainActivity).findViewById<Button>(resource).setOnClickListener{(parentFragment as ModeDetailsFragment).setPanelMode(-1)}
         if(!panel.statesInitialized[INDEX])
             ApiService.getPanelState(panel){
-                if(context != null) // Check for context to be not null bc it's possible for user to back out of fragment before this executes, which causes crash
+                if(context != null) { // Check for context to be not null bc it's possible for user to back out of fragment before this executes, which causes crash
                     this.onPanelStateFetched()
+                    panel.statesInitialized[INDEX] = true
+                }
             }
     }
 

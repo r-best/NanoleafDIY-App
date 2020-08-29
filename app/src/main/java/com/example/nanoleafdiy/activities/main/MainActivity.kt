@@ -3,9 +3,9 @@ package com.example.nanoleafdiy.activities.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.nanoleafdiy.*
+import com.example.nanoleafdiy.activities.main.networkdiagram.NetworkDiagramView
 import com.example.nanoleafdiy.utils.ApiService
 import com.example.nanoleafdiy.utils.Panel
-import com.example.nanoleafdiy.views.NetworkDiagramView
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     fun openDetailsFragment(panel: Panel){
         supportFragmentManager.beginTransaction()
-            .replace(R.id.details_container_outer, DetailsFragment(panel.directions))
+            .replace(R.id.details_container_outer, ModeDetailsFragment(panel.directions))
             .commit()
     }
 

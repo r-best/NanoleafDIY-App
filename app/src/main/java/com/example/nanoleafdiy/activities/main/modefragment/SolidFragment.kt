@@ -1,26 +1,22 @@
-package com.example.nanoleafdiy.activities.main
+package com.example.nanoleafdiy.activities.main.modefragment
 
 import android.graphics.Color
-import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.nanoleafdiy.R
+import com.example.nanoleafdiy.activities.main.MainActivity
 import com.example.nanoleafdiy.utils.ApiService
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker
 import java.util.*
 
 /**
  * A simple [Fragment] subclass.
- * Use the [DetailsSolidFragment.newInstance] factory method to
+ * Use the [SolidFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DetailsSolidFragment : DetailsSettingsFragmentBase {
+class SolidFragment : ModeFragmentBase {
     override val LAYOUT: Int = R.layout.fragment_details_solid
     override val INDEX: Int = 0
 

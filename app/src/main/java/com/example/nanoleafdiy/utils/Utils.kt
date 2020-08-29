@@ -1,6 +1,6 @@
 package com.example.nanoleafdiy.utils
 
-import com.example.nanoleafdiy.views.panels
+import com.example.nanoleafdiy.activities.main.networkdiagram.panels
 
 data class Quadruple<A, B, C, D>(var first: A, var second: B, var third: C, var fourth: D)
 

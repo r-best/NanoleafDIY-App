@@ -1,4 +1,4 @@
-package com.example.nanoleafdiy.views
+package com.example.nanoleafdiy.activities.main.networkdiagram
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,8 +8,8 @@ import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatImageView
-import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.activities.main.MainActivity
+import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.utils.ApiService
 
 class NetworkDiagramView @JvmOverloads constructor(
@@ -68,7 +68,7 @@ class NetworkDiagramView @JvmOverloads constructor(
                 panels[0].position.first + (PANEL_SCALE / 2.5f * cosD(panels[0].angle)),
                 panels[0].position.second + (PANEL_SCALE / 2.5f * sinD(panels[0].angle))
             )
-            controllerPath.rLineTo(PANEL_SCALE / 15 * sinD(-panels[0].angle), PANEL_SCALE / 15 * cosD(-panels[0].angle))
+            controllerPath.rLineTo(PANEL_SCALE / 15 * sinD(-panels[0].angle),  PANEL_SCALE / 15 * cosD(-panels[0].angle))
             controllerPath.rLineTo(PANEL_SCALE / 5 * cosD(panels[0].angle), PANEL_SCALE / 5 * sinD(panels[0].angle))
             controllerPath.rLineTo(-PANEL_SCALE / 15 * sinD(-panels[0].angle), -PANEL_SCALE / 15 * cosD(-panels[0].angle))
             fillPaint.color = Color.BLACK

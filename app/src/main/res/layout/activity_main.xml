@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <com.example.nanoleafdiy.views.NetworkDiagramView
+            <com.example.nanoleafdiy.activities.main.networkdiagram.NetworkDiagramView
                 android:id="@+id/network_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

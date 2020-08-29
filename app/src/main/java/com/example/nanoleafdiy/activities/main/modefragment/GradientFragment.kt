@@ -1,22 +1,20 @@
-package com.example.nanoleafdiy.activities.main
+package com.example.nanoleafdiy.activities.main.modefragment
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nanoleafdiy.R
+import com.example.nanoleafdiy.activities.main.MainActivity
 import com.example.nanoleafdiy.utils.ApiService
 import com.example.nanoleafdiy.utils.GradientStep
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker
@@ -27,7 +25,7 @@ import com.pes.androidmaterialcolorpickerdialog.ColorPicker
  * Use the [DetailsGradientFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DetailsGradientFragment: DetailsSettingsFragmentBase {
+class DetailsGradientFragment : ModeFragmentBase {
     override val LAYOUT: Int = R.layout.fragment_details_gradient
     override val INDEX: Int = 1
 

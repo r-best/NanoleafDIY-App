@@ -1,21 +1,21 @@
-package com.example.nanoleafdiy.activities.main
+package com.example.nanoleafdiy.activities.main.modefragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import com.example.nanoleafdiy.R
+import com.example.nanoleafdiy.activities.main.ModeDetailsFragment
+import com.example.nanoleafdiy.activities.main.MainActivity
 import com.example.nanoleafdiy.utils.SquareImageView
-import com.example.nanoleafdiy.utils.getPanel
 
 /**
  * A simple [Fragment] subclass.
- * Use the [DetailsChooseModeFragment.newInstance] factory method to
+ * Use the [ChooseModeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DetailsChooseModeFragment: Fragment() {
+class ChooseModeFragment: Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,7 +28,7 @@ class DetailsChooseModeFragment: Fragment() {
     override fun onStart() {
         val registerListener = fun(layoutElement: Int, mode: Int) {
             (context as MainActivity).findViewById<SquareImageView>(layoutElement).setOnClickListener{
-                (parentFragment as DetailsFragment).setPanelMode(mode)
+                (parentFragment as ModeDetailsFragment).setPanelMode(mode)
             }
         }
         registerListener(R.id.modeSelect_solid, 0)

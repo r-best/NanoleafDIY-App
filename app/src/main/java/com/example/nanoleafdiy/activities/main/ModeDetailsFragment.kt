@@ -7,6 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.R
+import com.example.nanoleafdiy.activities.main.modefragment.ChooseModeFragment
+import com.example.nanoleafdiy.activities.main.modefragment.DetailsGradientFragment
+import com.example.nanoleafdiy.activities.main.modefragment.NoSettingsFragment
+import com.example.nanoleafdiy.activities.main.modefragment.SolidFragment
 import com.example.nanoleafdiy.utils.ApiService
 import com.example.nanoleafdiy.utils.getPanel
 
@@ -16,13 +20,13 @@ import com.example.nanoleafdiy.utils.getPanel
  * the user to change the panel's settings
  *
  * Contains a child fragment depending on the current panel mode with mode-specific settings, i.e.:
- *  - DetailsSolidFragment allows the user to choose a single color for the panel
- *  - DetailsGradientFragment allows the user to choose a range of colors for the panel
+ *  - SolidFragment allows the user to choose a single color for the panel
+ *  - GradientFragment allows the user to choose a range of colors for the panel
  *      to fade between, along with fade transition times
- *  - DetailsChooseModeFragment is not tied to a real panel mode (uses -1) and lets the user
+ *  - ChooseModeFragment is not tied to a real panel mode (uses -1) and lets the user
  *      select a different mode
  */
-class DetailsFragment : Fragment { constructor() : super()
+class ModeDetailsFragment : Fragment { constructor() : super()
     constructor(directions: String) : super() {
         arguments = Bundle().apply { putString("directions", directions) }
     }
@@ -57,10 +61,10 @@ class DetailsFragment : Fragment { constructor() : super()
             (context as MainActivity).redrawDiagram()
         }
         when(mode){
-            -1 -> swapFragment(DetailsChooseModeFragment())
-            0 -> swapFragment(DetailsSolidFragment(panel.directions))
-            1 -> swapFragment(DetailsGradientFragment(panel.directions))
-            else -> swapFragment(DetailsNoSettingsFragment(panel.directions))
+            -1   -> swapFragment(ChooseModeFragment())
+            0    -> swapFragment(SolidFragment(panel.directions))
+            1    -> swapFragment(DetailsGradientFragment(panel.directions))
+            else -> swapFragment(NoSettingsFragment(panel.directions))
         }
     }
 
