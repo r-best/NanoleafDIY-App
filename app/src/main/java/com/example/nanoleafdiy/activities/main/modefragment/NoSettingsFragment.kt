@@ -17,7 +17,6 @@ class NoSettingsFragment : ModeFragmentBase {
     constructor(directions: String): super(directions)
 
     override fun onStart() {
-        super.start(R.id.nosettings_switchmode_button)
         super.onStart()
     }
 

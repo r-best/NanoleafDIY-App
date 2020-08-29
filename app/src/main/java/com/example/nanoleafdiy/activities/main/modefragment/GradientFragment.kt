@@ -38,7 +38,7 @@ class DetailsGradientFragment : ModeFragmentBase {
     private lateinit var listAdapter: GradientSetAdapter
 
     override fun onStart() {
-        super.start(R.id.gradient_switchmode_button)
+        super.onStart()
 
         resetChanges()
 
@@ -57,8 +57,6 @@ class DetailsGradientFragment : ModeFragmentBase {
             panel.gradientSteps = changes
             ApiService.setGradient(panel)
         }
-
-        super.onStart()
     }
 
     override fun onResume() {

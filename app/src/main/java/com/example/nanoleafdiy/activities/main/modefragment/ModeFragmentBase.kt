@@ -34,9 +34,9 @@ abstract class ModeFragmentBase : Fragment {
         return inflater.inflate(LAYOUT, container, false)
     }
 
-    protected fun start(resource: Int) {
+    override fun onStart() {
+        super.onStart()
         panel = getPanel(arguments?.getString("directions")!!)!!
-        (context as MainActivity).findViewById<Button>(resource).setOnClickListener{(parentFragment as ModeDetailsFragment).setPanelMode(-1)}
         if(!panel.statesInitialized[INDEX])
             ApiService.getPanelState(panel){
                 if(context != null) { // Check for context to be not null bc it's possible for user to back out of fragment before this executes, which causes crash

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.R
@@ -20,9 +21,9 @@ import com.example.nanoleafdiy.utils.getPanel
  * the user to change the panel's settings
  *
  * Contains a child fragment depending on the current panel mode with mode-specific settings, i.e.:
- *  - SolidFragment allows the user to choose a single color for the panel
+ *  - SolidFragment allows the user to choose a single color for the panel (mode 0)
  *  - GradientFragment allows the user to choose a range of colors for the panel
- *      to fade between, along with fade transition times
+ *      to fade between, along with fade transition times (mode 1)
  *  - ChooseModeFragment is not tied to a real panel mode (uses -1) and lets the user
  *      select a different mode
  */
@@ -42,6 +43,11 @@ class ModeDetailsFragment : Fragment { constructor() : super()
         setPanelMode(panel.mode)
 
         return inflater.inflate(R.layout.fragment_details, container, false)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        (context as MainActivity).findViewById<Button>(R.id.switchmode_button).setOnClickListener { setPanelMode(-1) }
     }
 
     /**

@@ -26,11 +26,10 @@ class SolidFragment : ModeFragmentBase {
     private lateinit var colorView: TextView
 
     override fun onStart() {
-        super.start(R.id.solid_switchmode_button)
+        super.onStart()
         colorView = (context as MainActivity).findViewById(R.id.color_field)
         colorView.setOnClickListener(::launchColorPicker)
         updateColorDisplay()
-        super.onStart()
     }
 
     override fun onPanelStateFetched() {
