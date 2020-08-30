@@ -85,4 +85,3 @@ class Panel {
     }
 }
 
-class GradientStep(var r: Int, var g: Int, var b: Int, var t: Int)
