@@ -6,6 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/gradientpresets_button"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:text="Presets >"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="fill_parent"
@@ -14,7 +26,7 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/gradientpresets_button">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/gradient_step_list"
@@ -32,21 +44,24 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        style="?android:attr/buttonBarStyle">
 
         <Button
             android:id="@+id/gradient_confirm_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Save Changes" />
+            android:text="Save Changes"
+            style="?android:attr/buttonBarButtonStyle" />
 
         <Button
             android:id="@+id/gradient_add_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="+ Add new step" />
+            android:text="+ Add new step"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

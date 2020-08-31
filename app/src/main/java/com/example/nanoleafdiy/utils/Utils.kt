@@ -25,4 +25,13 @@ val SOLID_PRESETS: List<SolidPreset> = listOf(
 
 class GradientPreset(name: String, var steps: MutableList<GradientStep>): Preset(name)
 val GRADIENT_PRESETS: List<GradientPreset> = listOf(
+    GradientPreset("1", mutableListOf(
+        GradientStep(255, 102, 68, 500),
+        GradientStep(0, 0, 0, 500),
+        GradientStep(0, 255, 0, 500),
+        GradientStep(255, 0, 0, 500),
+        GradientStep(0, 255, 255, 500),
+        GradientStep(255, 255, 0, 500),
+        GradientStep(0, 1, 0, 500)
+    ))
 )

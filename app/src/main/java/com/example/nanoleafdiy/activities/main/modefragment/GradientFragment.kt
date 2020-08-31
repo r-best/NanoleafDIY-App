@@ -1,6 +1,8 @@
 package com.example.nanoleafdiy.activities.main.modefragment
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,7 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nanoleafdiy.R
 import com.example.nanoleafdiy.activities.main.MainActivity
+import com.example.nanoleafdiy.activities.presets.PresetsActivity
 import com.example.nanoleafdiy.utils.ApiService
+import com.example.nanoleafdiy.utils.GRADIENT_PRESETS
 import com.example.nanoleafdiy.utils.GradientStep
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker
 
@@ -33,19 +37,14 @@ class DetailsGradientFragment : ModeFragmentBase {
     constructor(directions: String): super(directions)
 
     // Copy of the panel's gradientSteps field, to be edited and assigned back to the panel when the users hits 'Confirm'
-    private lateinit var changes: MutableList<GradientStep>
+    private var changes: MutableList<GradientStep> = mutableListOf()
 
     private lateinit var listAdapter: GradientSetAdapter
 
     override fun onStart() {
         super.onStart()
 
-        resetChanges()
-
-        (context as MainActivity).findViewById<RecyclerView>(R.id.gradient_step_list).apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = listAdapter
-        }
+        refreshList(changes)
 
         (context as MainActivity).findViewById<Button>(R.id.gradient_add_button).setOnClickListener {
             changes.add(GradientStep(255, 255, 255, 500))
@@ -57,24 +56,40 @@ class DetailsGradientFragment : ModeFragmentBase {
             panel.gradientSteps = changes
             ApiService.setGradient(panel)
         }
+
+        (context as MainActivity).findViewById<Button>(R.id.gradientpresets_button).setOnClickListener{
+            val intent = Intent(context, PresetsActivity::class.java).apply { putExtra("mode", INDEX) }
+            startActivityForResult(intent, 0)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        resetChanges()
+        refreshList(null)
     }
 
     override fun onPanelStateFetched() {
-        resetChanges()
+        refreshList(null)
     }
 
-    private fun resetChanges(){
-        changes = mutableListOf()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK && data != null) {
+            val preset = GRADIENT_PRESETS[data.getIntExtra("preset_index", 0)]
+            refreshList(preset.steps)
+        }
+    }
 
-        for(gradientStep in panel.gradientSteps)
-            changes.add(GradientStep(gradientStep.r, gradientStep.g, gradientStep.b, gradientStep.t))
+    private fun refreshList(list: MutableList<GradientStep>?){
+        if(list == null) {
+            changes = mutableListOf()
+            for(gradientStep in panel.gradientSteps)
+                changes.add(GradientStep(gradientStep.r, gradientStep.g, gradientStep.b, gradientStep.t))
+        }
+        else
+            changes = list
+
         listAdapter = GradientSetAdapter(changes)
-
         (context as MainActivity).findViewById<RecyclerView>(R.id.gradient_step_list).apply {
             layoutManager = LinearLayoutManager(context)
             adapter = listAdapter
