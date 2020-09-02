@@ -4,8 +4,11 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.LinearLayout.LayoutParams
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,7 +42,12 @@ class PresetListAdapter(private val dataset: List<Preset>): RecyclerView.Adapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PresetViewHolder {
         this.parent = parent
-        return PresetViewHolder(TextView(parent.context))
+        return PresetViewHolder(TextView(parent.context).apply {
+            layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+            setPadding(0, 20, 0, 20)
+            gravity = Gravity.CENTER
+            textSize = 20f
+        })
     }
 
     override fun onBindViewHolder(holder: PresetViewHolder, i: Int) {
