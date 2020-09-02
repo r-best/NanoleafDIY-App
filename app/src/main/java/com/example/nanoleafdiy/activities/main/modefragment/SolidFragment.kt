@@ -53,11 +53,6 @@ class SolidFragment : ModeFragmentBase {
         }
     }
 
-    private fun updateColorDisplay(){
-        colorView.setBackgroundColor(Color.argb(255, panel.r, panel.g, panel.b))
-        colorView.text = String.format("#%02x%02x%02x", panel.r, panel.g, panel.b).toUpperCase(Locale.ROOT)
-    }
-
     private fun launchColorPicker(v: View?){
         val colorPicker = ColorPicker((context as MainActivity), panel.r, panel.g, panel.b)
         colorPicker.show()
@@ -74,5 +69,10 @@ class SolidFragment : ModeFragmentBase {
         ApiService.setColor(panel)
         updateColorDisplay()
         (context as MainActivity).redrawDiagram()
+    }
+
+    private fun updateColorDisplay(){
+        colorView.setBackgroundColor(Color.argb(255, panel.r, panel.g, panel.b))
+        colorView.text = String.format("#%02x%02x%02x", panel.r, panel.g, panel.b).toUpperCase(Locale.ROOT)
     }
 }

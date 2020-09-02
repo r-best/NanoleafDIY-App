@@ -1,6 +1,11 @@
 package com.example.nanoleafdiy.utils
 
+import com.example.nanoleafdiy.activities.main.modefragment.GradientFragment
+import com.example.nanoleafdiy.activities.main.modefragment.ModeFragmentBase
+import com.example.nanoleafdiy.activities.main.modefragment.NoSettingsFragment
+import com.example.nanoleafdiy.activities.main.modefragment.SolidFragment
 import com.example.nanoleafdiy.activities.main.networkdiagram.panels
+import kotlin.reflect.KClass
 
 
 data class GradientStep(var r: Int, var g: Int, var b: Int, var t: Int)
@@ -13,6 +18,15 @@ fun getPanel(directions: String): Panel? {
     }
     return null
 }
+
+data class Mode(val name: String, val settingsFragment: KClass<out ModeFragmentBase>)
+val PANEL_MODES: List<Mode> = listOf(
+    Mode("Solid Color", SolidFragment::class),
+    Mode("Custom Gradient", GradientFragment::class),
+    Mode("Rainbow", NoSettingsFragment::class),
+    Mode("Theater Chase", NoSettingsFragment::class),
+    Mode("Theater Chase Rainbow", NoSettingsFragment::class)
+)
 
 abstract class Preset(var name: String)
 

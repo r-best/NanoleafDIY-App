@@ -9,11 +9,13 @@ import androidx.fragment.app.Fragment
 import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.R
 import com.example.nanoleafdiy.activities.main.modefragment.ChooseModeFragment
-import com.example.nanoleafdiy.activities.main.modefragment.DetailsGradientFragment
+import com.example.nanoleafdiy.activities.main.modefragment.GradientFragment
 import com.example.nanoleafdiy.activities.main.modefragment.NoSettingsFragment
 import com.example.nanoleafdiy.activities.main.modefragment.SolidFragment
 import com.example.nanoleafdiy.utils.ApiService
+import com.example.nanoleafdiy.utils.PANEL_MODES
 import com.example.nanoleafdiy.utils.getPanel
+import kotlin.reflect.full.companionObjectInstance
 
 /**
  * This fragment sits on the main screen below the network diagram
@@ -24,6 +26,8 @@ import com.example.nanoleafdiy.utils.getPanel
  *  - SolidFragment allows the user to choose a single color for the panel (mode 0)
  *  - GradientFragment allows the user to choose a range of colors for the panel
  *      to fade between, along with fade transition times (mode 1)
+ *  - NoSettingsFragment is a placeholder for modes with no user-defined settings, like theaterchase and rainbow
+ *      - Future state: this will include some global settings, like brightness
  *  - ChooseModeFragment is not tied to a real panel mode (uses -1) and lets the user
  *      select a different mode
  */
@@ -66,12 +70,9 @@ class ModeDetailsFragment : Fragment { constructor() : super()
             ApiService.setMode(panel)
             (context as MainActivity).redrawDiagram()
         }
-        when(mode){
-            -1   -> swapFragment(ChooseModeFragment())
-            0    -> swapFragment(SolidFragment(panel.directions))
-            1    -> swapFragment(DetailsGradientFragment(panel.directions))
-            else -> swapFragment(NoSettingsFragment(panel.directions))
-        }
+        if(mode == -1) swapFragment(ChooseModeFragment())
+        // Asinine way of constructing an object from the class found in the list, I hate statically typed languages
+        else swapFragment(PANEL_MODES[mode].settingsFragment.constructors.toList()[1].call(panel.directions))
     }
 
     private fun swapFragment(fragment: Fragment){

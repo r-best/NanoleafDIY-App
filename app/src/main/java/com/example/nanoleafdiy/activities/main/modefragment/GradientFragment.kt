@@ -26,10 +26,10 @@ import com.pes.androidmaterialcolorpickerdialog.ColorPicker
 
 /**
  * A simple [Fragment] subclass.
- * Use the [DetailsGradientFragment.newInstance] factory method to
+ * Use the [GradientFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DetailsGradientFragment : ModeFragmentBase {
+class GradientFragment : ModeFragmentBase {
     override val LAYOUT: Int = R.layout.fragment_details_gradient
     override val INDEX: Int = 1
 
