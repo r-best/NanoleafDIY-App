@@ -52,10 +52,7 @@ class GradientFragment : ModeFragmentBase {
             listAdapter.notifyItemRangeChanged(changes.size-1, changes.size)
         }
 
-        (context as MainActivity).findViewById<Button>(R.id.gradient_confirm_button).setOnClickListener {
-            panel.gradientSteps = changes
-            ApiService.setGradient(panel)
-        }
+        (context as MainActivity).findViewById<Button>(R.id.gradient_confirm_button).setOnClickListener { saveChanges() }
 
         (context as MainActivity).findViewById<Button>(R.id.gradientpresets_button).setOnClickListener{
             val intent = Intent(context, PresetsActivity::class.java).apply { putExtra("mode", INDEX) }
@@ -65,7 +62,7 @@ class GradientFragment : ModeFragmentBase {
 
     override fun onResume() {
         super.onResume()
-        refreshList(null)
+        refreshList(changes)
     }
 
     override fun onPanelStateFetched() {
@@ -77,6 +74,7 @@ class GradientFragment : ModeFragmentBase {
         if(resultCode == Activity.RESULT_OK && data != null) {
             val preset = GRADIENT_PRESETS[data.getIntExtra("preset_index", 0)]
             refreshList(preset.steps)
+            saveChanges()
         }
     }
 
@@ -94,6 +92,11 @@ class GradientFragment : ModeFragmentBase {
             layoutManager = LinearLayoutManager(context)
             adapter = listAdapter
         }
+    }
+
+    private fun saveChanges(){
+        panel.gradientSteps = changes
+        ApiService.setGradient(panel)
     }
 }
 

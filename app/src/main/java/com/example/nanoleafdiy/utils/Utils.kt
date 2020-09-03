@@ -47,5 +47,9 @@ val GRADIENT_PRESETS: List<GradientPreset> = listOf(
         GradientStep(0, 255, 255, 500),
         GradientStep(255, 255, 0, 500),
         GradientStep(0, 1, 0, 500)
+    )),
+    GradientPreset("Siren", mutableListOf(
+        GradientStep(255, 0, 0, 500),
+        GradientStep(0, 0, 255, 500)
     ))
 )
