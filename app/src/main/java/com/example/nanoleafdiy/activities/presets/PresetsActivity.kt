@@ -31,6 +31,7 @@ class PresetsActivity : AppCompatActivity() {
             when(intent.getIntExtra("mode", -1)){
                 0    -> adapter = PresetListAdapter(SOLID_PRESETS)
                 1    -> adapter = PresetListAdapter(GRADIENT_PRESETS)
+                2    -> adapter = PresetListAdapter(GRADIENT_PRESETS)
                 else -> println("Error")
             }
         }

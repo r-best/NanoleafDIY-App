@@ -1,9 +1,6 @@
 package com.example.nanoleafdiy.utils
 
-import com.example.nanoleafdiy.activities.main.modefragment.GradientFragment
-import com.example.nanoleafdiy.activities.main.modefragment.ModeFragmentBase
-import com.example.nanoleafdiy.activities.main.modefragment.NoSettingsFragment
-import com.example.nanoleafdiy.activities.main.modefragment.SolidFragment
+import com.example.nanoleafdiy.activities.main.modefragment.*
 import com.example.nanoleafdiy.activities.main.networkdiagram.panels
 import kotlin.reflect.KClass
 
@@ -23,6 +20,7 @@ data class Mode(val name: String, val settingsFragment: KClass<out ModeFragmentB
 val PANEL_MODES: List<Mode> = listOf(
     Mode("Solid Color", SolidFragment::class),
     Mode("Custom Gradient", GradientFragment::class),
+    Mode("Blink", BlinkFragment::class),
     Mode("Rainbow", NoSettingsFragment::class),
     Mode("Theater Chase", NoSettingsFragment::class),
     Mode("Theater Chase Rainbow", NoSettingsFragment::class)

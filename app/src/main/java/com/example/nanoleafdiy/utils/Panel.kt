@@ -19,7 +19,7 @@ class Panel {
 
     var mode: Int = -1 // Active lighting mode, 0 is solid color, 1 is gradient, 2 rainbow, etc..
 
-    var statesInitialized = mutableListOf(false, false, false, false, false)
+    var statesInitialized = mutableListOf(false, false, false, false, false, false)
 
     // Data for mode 0 (Solid color)
     var r: Int = 255
@@ -28,6 +28,9 @@ class Panel {
 
     // Data for mode 1 (custom gradient)
     var gradientSteps = mutableListOf<GradientStep>()
+
+    // Data for mode 2 (blink)
+    var blinkSteps = mutableListOf<GradientStep>()
 
     /*-----------------------------------------------------
      ---------Utilities for drawing network diagram--------

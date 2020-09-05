@@ -35,6 +35,9 @@ class ApiService { companion object {
 
         /** Set the stored gradient state of a given panel */
         @POST("panels/customgradient") fun setGradient(@Body body: JsonElement): Call<JsonElement>
+
+        /** Set the stored blink state of a given panel */
+        @POST("panels/blink") fun setBlink(@Body body: JsonElement): Call<JsonElement>
     }
 
     // Static IP because I couldn't get Android to recognize mDNS :(
@@ -88,6 +91,17 @@ class ApiService { companion object {
                         ))
                     }
                 }
+                2 -> {
+                    panel.blinkSteps = mutableListOf()
+                    for(i in 2 until state.length-1 step 10){
+                        panel.blinkSteps.add(GradientStep(
+                            state.substring(i, i+2).toInt(16),
+                            state.substring(i+2, i+4).toInt(16),
+                            state.substring(i+4, i+6).toInt(16),
+                            state.substring(i+6, i+10).toInt()
+                        ))
+                    }
+                }
             }
             if(cb != null) cb()
         }))
@@ -116,6 +130,20 @@ class ApiService { companion object {
         body += "\n]}"
         println(body)
         api.setGradient(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
+    }
+
+    fun setBlink(panel: Panel){
+        var body = "{ \"directions\": \"%s\", \"length\": \"%d\", \"steps\": [\n".format(panel.directions, panel.blinkSteps.size)
+        for(i in 0 until panel.blinkSteps.size){
+            val step = panel.blinkSteps[i]
+            println(step.r)
+            body += "{ \"r\": \"%02X\", \"g\": \"%02X\", \"b\": \"%02X\", \"t\": \"%d\" }".format(step.r, step.g, step.b, step.t)
+            if(i < panel.blinkSteps.size-1)
+                body += ",\n"
+        }
+        body += "\n]}"
+        println(body)
+        api.setBlink(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
     }
 
     class ResponseCallback constructor(private val onRes: (JsonElement)->Unit): Callback<JsonElement>{
