@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.LinearLayout.LayoutParams
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,17 +27,12 @@ class PresetsActivity : AppCompatActivity() {
 
         findViewById<RecyclerView>(R.id.presetcolor_list).apply {
             layoutManager = LinearLayoutManager(context)
-            when(intent.getIntExtra("mode", -1)){
-                0    -> adapter = PresetListAdapter(SOLID_PRESETS)
-                1    -> adapter = PresetListAdapter(GRADIENT_PRESETS)
-                2    -> adapter = PresetListAdapter(GRADIENT_PRESETS)
-                else -> println("Error")
-            }
+            adapter = PresetListAdapter(PALETTE_PRESETS)
         }
     }
 }
 
-class PresetListAdapter(private val dataset: List<Preset>): RecyclerView.Adapter<PresetListAdapter.PresetViewHolder>(){
+class PresetListAdapter(private val dataset: List<Palette>): RecyclerView.Adapter<PresetListAdapter.PresetViewHolder>(){
     private lateinit var parent: ViewGroup
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PresetViewHolder {

@@ -27,10 +27,9 @@ class Panel {
     var b: Int = 255
 
     // Data for mode 1 (custom gradient)
-    var gradientSteps = mutableListOf<GradientStep>()
-
-    // Data for mode 2 (blink)
-    var blinkSteps = mutableListOf<GradientStep>()
+    var palette = mutableListOf<PaletteColor>()
+    var randomize = false
+    var synchronize = true
 
     /*-----------------------------------------------------
      ---------Utilities for drawing network diagram--------

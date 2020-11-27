@@ -4,18 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.*
 import androidx.fragment.app.Fragment
-import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.R
-import com.example.nanoleafdiy.activities.main.modefragment.ChooseModeFragment
-import com.example.nanoleafdiy.activities.main.modefragment.GradientFragment
-import com.example.nanoleafdiy.activities.main.modefragment.NoSettingsFragment
-import com.example.nanoleafdiy.activities.main.modefragment.SolidFragment
-import com.example.nanoleafdiy.utils.ApiService
-import com.example.nanoleafdiy.utils.PANEL_MODES
-import com.example.nanoleafdiy.utils.getPanel
-import kotlin.reflect.full.companionObjectInstance
+import com.example.nanoleafdiy.utils.*
 
 /**
  * This fragment sits on the main screen below the network diagram
@@ -44,25 +36,30 @@ class ModeDetailsFragment : Fragment { constructor() : super()
     ): View? {
         panel = getPanel(arguments?.getString("directions")!!)!!
 
-        setPanelMode(panel.mode)
-
         return inflater.inflate(R.layout.fragment_details, container, false)
     }
 
     override fun onStart() {
         super.onStart()
-        (context as MainActivity).findViewById<Button>(R.id.switchmode_button).setOnClickListener { setPanelMode(-1) }
+
+        (context as MainActivity).findViewById<TextView>(R.id.paneldetails_palette_name_display).text = matchPalette(panel.palette)
+        (context as MainActivity).findViewById<Switch>(R.id.paneldetails_randomize_switch).isChecked = panel.randomize
+        (context as MainActivity).findViewById<Switch>(R.id.paneldetails_synchronize_switch).isChecked = panel.synchronize
+
+        val spinner = (context as MainActivity).findViewById<Spinner>(R.id.paneldetails_mode_dropdown)
+        ArrayAdapter(context as MainActivity, android.R.layout.simple_spinner_item, PANEL_MODES.map { it.name + " Mode" }).also {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = it
+            spinner.setSelection(panel.mode)
+            spinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(adapter: AdapterView<*>?) {}
+                override fun onItemSelected(adapter: AdapterView<*>?, v: View?, pos: Int, id: Long) {
+                    setPanelMode(pos)
+                }
+            }
+        }
     }
 
-    /**
-     * Called by the DetailsChooseModeFragment when the user selects a new mode, makes
-     * the API call to change the panel to that mode and switches the active fragment
-     * to reflect the change
-     *
-     * Also called by the fragments with a mode of -1 when the user presses the change
-     * mode button, this is just an indicator to swap to the change mode fragment and
-     * does not actually change the panel's mode
-     */
     fun setPanelMode(mode: Int){
         println("SET PANEL MODE %d".format(mode))
         if(mode > -1 && mode != panel.mode){
@@ -70,14 +67,5 @@ class ModeDetailsFragment : Fragment { constructor() : super()
             ApiService.setMode(panel)
             (context as MainActivity).redrawDiagram()
         }
-        if(mode == -1) swapFragment(ChooseModeFragment())
-        // Asinine way of constructing an object from the class found in the list, I hate statically typed languages
-        else swapFragment(PANEL_MODES[mode].settingsFragment.constructors.toList()[1].call(panel.directions))
-    }
-
-    private fun swapFragment(fragment: Fragment){
-        childFragmentManager.beginTransaction()
-            .replace(R.id.details_container_inner, fragment)
-            .commit()
     }
 }

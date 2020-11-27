@@ -30,14 +30,11 @@ class ApiService { companion object {
         /** Sets the active lighting mode of a given panel (solid color, gradient, rainbow, etc..) */
         @POST("panels/mode") fun setMode(@Body body: JsonElement): Call<JsonElement>
 
-        /** Set the stored solid color state of a given panel */
-        @POST("panels/color") fun setColor(@Body body: JsonElement): Call<JsonElement>
+        /** Sets the brightness of a given panel (0-255) */
+        @POST("panels/brightness") fun setBrightness(@Body body: JsonElement): Call<JsonElement>
 
         /** Set the stored gradient state of a given panel */
-        @POST("panels/customgradient") fun setGradient(@Body body: JsonElement): Call<JsonElement>
-
-        /** Set the stored blink state of a given panel */
-        @POST("panels/blink") fun setBlink(@Body body: JsonElement): Call<JsonElement>
+        @POST("panels/palette") fun setPalette(@Body body: JsonElement): Call<JsonElement>
     }
 
     // Static IP because I couldn't get Android to recognize mDNS :(
@@ -73,35 +70,18 @@ class ApiService { companion object {
         api.getPanelState(JsonParser().parse(body)).enqueue(ResponseCallback(fun(res: JsonElement){
             val state = res.toString().substring(1, res.toString().length - 1)
             panel.mode = state.substring(0, 1).toInt()
+            panel.randomize = state.substring(1, 2) == "1"
+            panel.synchronize = state.substring(2, 3) == "1"
+            println("AAAAA"+state.substring(2, 3)+panel.synchronize)
 
-            when(panel.mode){
-                0 -> {
-                    panel.r = state.substring(1, 3).toInt(16)
-                    panel.g = state.substring(3, 5).toInt(16)
-                    panel.b = state.substring(5, 7).toInt(16)
-                }
-                1 -> {
-                    panel.gradientSteps = mutableListOf()
-                    for(i in 2 until state.length-1 step 10){
-                        panel.gradientSteps.add(GradientStep(
-                            state.substring(i, i+2).toInt(16),
-                            state.substring(i+2, i+4).toInt(16),
-                            state.substring(i+4, i+6).toInt(16),
-                            state.substring(i+6, i+10).toInt()
-                        ))
-                    }
-                }
-                2 -> {
-                    panel.blinkSteps = mutableListOf()
-                    for(i in 2 until state.length-1 step 10){
-                        panel.blinkSteps.add(GradientStep(
-                            state.substring(i, i+2).toInt(16),
-                            state.substring(i+2, i+4).toInt(16),
-                            state.substring(i+4, i+6).toInt(16),
-                            state.substring(i+6, i+10).toInt()
-                        ))
-                    }
-                }
+            panel.palette = mutableListOf()
+            for(i in 4 until state.length-1 step 10){
+                panel.palette.add(PaletteColor(
+                    state.substring(i, i+2).toInt(16),
+                    state.substring(i+2, i+4).toInt(16),
+                    state.substring(i+4, i+6).toInt(16),
+                    state.substring(i+6, i+10).toInt()
+                ))
             }
             if(cb != null) cb()
         }))
@@ -112,38 +92,18 @@ class ApiService { companion object {
         api.setMode(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
     }
 
-    fun setColor(panel: Panel){
-        val body = "{ \"directions\": \"%s\", \"r\": \"%02X\", \"g\": \"%02X\", \"b\": \"%02X\" }"
-            .format(panel.directions, panel.r, panel.g, panel.b)
-        api.setColor(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
-    }
-
-    fun setGradient(panel: Panel){
-        var body = "{ \"directions\": \"%s\", \"length\": \"%d\", \"steps\": [\n".format(panel.directions, panel.gradientSteps.size)
-        for(i in 0 until panel.gradientSteps.size){
-            val step = panel.gradientSteps[i]
-            println(step.r)
+    fun setPalette(panel: Panel){
+        var body = "{ \"directions\": \"%s\", \"length\": \"%d\", \"randomize\": \"%s\", \"synchronize\": \"%s\", \"steps\": [\n"
+            .format(panel.directions, panel.palette.size, panel.randomize, panel.synchronize)
+        for(i in 0 until panel.palette.size){
+            val step = panel.palette[i]
             body += "{ \"r\": \"%02X\", \"g\": \"%02X\", \"b\": \"%02X\", \"t\": \"%d\" }".format(step.r, step.g, step.b, step.t)
-            if(i < panel.gradientSteps.size-1)
+            if(i < panel.palette.size-1)
                 body += ",\n"
         }
         body += "\n]}"
         println(body)
-        api.setGradient(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
-    }
-
-    fun setBlink(panel: Panel){
-        var body = "{ \"directions\": \"%s\", \"length\": \"%d\", \"steps\": [\n".format(panel.directions, panel.blinkSteps.size)
-        for(i in 0 until panel.blinkSteps.size){
-            val step = panel.blinkSteps[i]
-            println(step.r)
-            body += "{ \"r\": \"%02X\", \"g\": \"%02X\", \"b\": \"%02X\", \"t\": \"%d\" }".format(step.r, step.g, step.b, step.t)
-            if(i < panel.blinkSteps.size-1)
-                body += ",\n"
-        }
-        body += "\n]}"
-        println(body)
-        api.setBlink(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
+        api.setPalette(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
     }
 
     class ResponseCallback constructor(private val onRes: (JsonElement)->Unit): Callback<JsonElement>{

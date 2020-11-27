@@ -1,11 +1,9 @@
 package com.example.nanoleafdiy.utils
 
-import com.example.nanoleafdiy.activities.main.modefragment.*
 import com.example.nanoleafdiy.activities.main.networkdiagram.panels
-import kotlin.reflect.KClass
 
 
-data class GradientStep(var r: Int, var g: Int, var b: Int, var t: Int)
+data class PaletteColor(var r: Int, var g: Int, var b: Int, var t: Int)
 data class Quadruple<A, B, C, D>(var first: A, var second: B, var third: C, var fourth: D)
 
 fun getPanel(directions: String): Panel? {
@@ -16,38 +14,36 @@ fun getPanel(directions: String): Panel? {
     return null
 }
 
-data class Mode(val name: String, val settingsFragment: KClass<out ModeFragmentBase>)
+fun matchPalette(palette: MutableList<PaletteColor>): String {
+    for (preset in PALETTE_PRESETS)
+        if(preset.colors.size == palette.size)
+            if(preset.colors.containsAll(palette) && palette.containsAll(preset.colors))
+                return preset.name
+    return "Custom"
+}
+
+data class Mode(val name: String)
 val PANEL_MODES: List<Mode> = listOf(
-    Mode("Solid Color", SolidFragment::class),
-    Mode("Custom Gradient", GradientFragment::class),
-    Mode("Blink", BlinkFragment::class),
-    Mode("Rainbow", NoSettingsFragment::class),
-    Mode("Theater Chase", NoSettingsFragment::class),
-    Mode("Theater Chase Rainbow", NoSettingsFragment::class)
+    Mode("Fade"),
+    Mode("Blink"),
+    Mode("Rainbow"),
+    Mode("Theater Chase"),
+    Mode("Theater Chase Rainbow")
 )
 
-abstract class Preset(var name: String)
-
-class SolidPreset(name: String, var r: Int, var g: Int, var b: Int): Preset(name)
-val SOLID_PRESETS: List<SolidPreset> = listOf(
-    SolidPreset("Pinkish", 150, 20, 45),
-    SolidPreset("Candle", 255, 147, 41),
-    SolidPreset("Clear Blue Sky", 64, 156, 255)
-)
-
-class GradientPreset(name: String, var steps: MutableList<GradientStep>): Preset(name)
-val GRADIENT_PRESETS: List<GradientPreset> = listOf(
-    GradientPreset("1", mutableListOf(
-        GradientStep(255, 102, 68, 500),
-        GradientStep(0, 0, 0, 500),
-        GradientStep(0, 255, 0, 500),
-        GradientStep(255, 0, 0, 500),
-        GradientStep(0, 255, 255, 500),
-        GradientStep(255, 255, 0, 500),
-        GradientStep(0, 1, 0, 500)
+class Palette(var name: String, var colors: MutableList<PaletteColor>)
+val PALETTE_PRESETS: List<Palette> = listOf(
+    Palette("1", mutableListOf(
+        PaletteColor(255, 102, 68, 500),
+        PaletteColor(0, 0, 0, 500),
+        PaletteColor(0, 255, 0, 500),
+        PaletteColor(255, 0, 0, 500),
+        PaletteColor(0, 255, 255, 500),
+        PaletteColor(255, 255, 0, 500),
+        PaletteColor(0, 1, 0, 500)
     )),
-    GradientPreset("Siren", mutableListOf(
-        GradientStep(255, 0, 0, 500),
-        GradientStep(0, 0, 255, 500)
+    Palette("Siren", mutableListOf(
+        PaletteColor(255, 0, 0, 500),
+        PaletteColor(0, 0, 255, 500)
     ))
 )
