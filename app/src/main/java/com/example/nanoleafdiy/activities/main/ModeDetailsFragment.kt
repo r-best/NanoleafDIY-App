@@ -1,5 +1,7 @@
 package com.example.nanoleafdiy.activities.main
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.nanoleafdiy.R
+import com.example.nanoleafdiy.activities.presets.PresetsActivity
 import com.example.nanoleafdiy.utils.*
 
 /**
@@ -43,8 +46,35 @@ class ModeDetailsFragment : Fragment { constructor() : super()
         super.onStart()
 
         (context as MainActivity).findViewById<TextView>(R.id.paneldetails_palette_name_display).text = matchPalette(panel.palette)
-        (context as MainActivity).findViewById<Switch>(R.id.paneldetails_randomize_switch).isChecked = panel.randomize
-        (context as MainActivity).findViewById<Switch>(R.id.paneldetails_synchronize_switch).isChecked = panel.synchronize
+        (context as MainActivity).findViewById<LinearLayout>(R.id.paneldetails_palette_display).setOnClickListener {
+            startActivityForResult(Intent(context, PresetsActivity::class.java), 0)
+        }
+
+        val randomizeSwitch = (context as MainActivity).findViewById<Switch>(R.id.paneldetails_randomize_switch)
+        randomizeSwitch.isChecked = panel.randomize
+        randomizeSwitch.setOnClickListener {
+            panel.randomize = randomizeSwitch.isChecked
+            ApiService.setPalette(panel)
+        }
+        val synchronizeSwitch = (context as MainActivity).findViewById<Switch>(R.id.paneldetails_synchronize_switch)
+        synchronizeSwitch.isChecked = panel.synchronize
+        synchronizeSwitch.setOnClickListener {
+            panel.synchronize = synchronizeSwitch.isChecked
+            ApiService.setPalette(panel)
+        }
+
+        updateBrightnessDisplay()
+        val slider = (context as MainActivity).findViewById<SeekBar>(R.id.paneldetails_brightness_slider)
+        slider.progress = panel.brightness
+        slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onStopTrackingTouch(p0: SeekBar?) {
+                panel.brightness = slider.progress
+                updateBrightnessDisplay()
+                ApiService.setBrightness(panel)
+            }
+            override fun onStartTrackingTouch(p0: SeekBar?) {}
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
+        })
 
         val spinner = (context as MainActivity).findViewById<Spinner>(R.id.paneldetails_mode_dropdown)
         ArrayAdapter(context as MainActivity, android.R.layout.simple_spinner_item, PANEL_MODES.map { it.name + " Mode" }).also {
@@ -58,6 +88,20 @@ class ModeDetailsFragment : Fragment { constructor() : super()
                 }
             }
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK && data != null) {
+            val preset = PALETTE_PRESETS[data.getIntExtra("preset_index", 0)]
+            (context as MainActivity).findViewById<TextView>(R.id.paneldetails_palette_name_display).text = preset.name
+            panel.palette = preset.colors
+            ApiService.setPalette(panel)
+        }
+    }
+
+    fun updateBrightnessDisplay(){
+        (context as MainActivity).findViewById<TextView>(R.id.paneldetails_brightness_numinput).text = ""+panel.brightness
     }
 
     fun setPanelMode(mode: Int){
