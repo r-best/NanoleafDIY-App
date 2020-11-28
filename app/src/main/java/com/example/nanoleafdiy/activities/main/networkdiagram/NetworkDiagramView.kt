@@ -44,11 +44,12 @@ class NetworkDiagramView @JvmOverloads constructor(
     override fun onTouchEvent(event: MotionEvent): Boolean {
         for(panel in panels) {
             if (panel.contains(event.x, event.y)) {
-                if(panel != selectedPanel){
-                    selectedPanel = panel
-                    (context as MainActivity).openDetailsFragment(selectedPanel!!)
-                    invalidate()
-                }
+                if(panel == selectedPanel)
+                    break
+
+                selectedPanel = panel
+                (context as MainActivity).openDetailsFragment(selectedPanel!!)
+                invalidate()
                 return super.onTouchEvent(event)
             }
         }
@@ -83,8 +84,8 @@ class NetworkDiagramView @JvmOverloads constructor(
                 strokePaint.color = Color.GRAY
             }
 
-            if(panel.mode == 0)
-                fillPaint.color = Color.rgb(panel.r, panel.g, panel.b)
+            if(panel.palette.size > 0)
+                fillPaint.color = Color.rgb(panel.palette[0].r, panel.palette[0].g, panel.palette[0].b)
             else
                 fillPaint.color = Color.rgb(255, 255, 255)
 

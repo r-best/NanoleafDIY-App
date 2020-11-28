@@ -70,12 +70,12 @@ class ApiService { companion object {
         api.getPanelState(JsonParser().parse(body)).enqueue(ResponseCallback(fun(res: JsonElement){
             val state = res.toString().substring(1, res.toString().length - 1)
             panel.mode = state.substring(0, 1).toInt()
-            panel.randomize = state.substring(1, 2) == "1"
-            panel.synchronize = state.substring(2, 3) == "1"
-            println("AAAAA"+state.substring(2, 3)+panel.synchronize)
+            panel.brightness = state.substring(2, 5).toInt()
+            panel.randomize = state.substring(5, 6) == "1"
+            panel.synchronize = state.substring(6, 7) == "1"
 
             panel.palette = mutableListOf()
-            for(i in 4 until state.length-1 step 10){
+            for(i in 7 until state.length-1 step 10){
                 panel.palette.add(PaletteColor(
                     state.substring(i, i+2).toInt(16),
                     state.substring(i+2, i+4).toInt(16),
@@ -90,6 +90,11 @@ class ApiService { companion object {
     fun setMode(panel: Panel){
         val body = "{ \"directions\": \"%s\", \"mode\": \"%d\" }".format(panel.directions, panel.mode)
         api.setMode(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
+    }
+
+    fun setBrightness(panel: Panel){
+        val body = "{ \"directions\": \"%s\", \"brightness\": \"%d\" }".format(panel.directions, panel.brightness)
+        api.setBrightness(JsonParser().parse(body)).enqueue(ResponseCallback(fun(_: JsonElement){}))
     }
 
     fun setPalette(panel: Panel){

@@ -32,7 +32,7 @@ val PANEL_MODES: List<Mode> = listOf(
 )
 
 class Palette(var name: String, var colors: MutableList<PaletteColor>)
-val PALETTE_PRESETS: List<Palette> = listOf(
+val PALETTE_PRESETS: MutableList<Palette> = mutableListOf(
     Palette("1", mutableListOf(
         PaletteColor(255, 102, 68, 500),
         PaletteColor(0, 0, 0, 500),
@@ -45,5 +45,9 @@ val PALETTE_PRESETS: List<Palette> = listOf(
     Palette("Siren", mutableListOf(
         PaletteColor(255, 0, 0, 500),
         PaletteColor(0, 0, 255, 500)
+    )),
+    Palette("Blinking", mutableListOf(
+        PaletteColor(255, 255, 255, 500),
+        PaletteColor(0, 0, 0, 500)
     ))
 )

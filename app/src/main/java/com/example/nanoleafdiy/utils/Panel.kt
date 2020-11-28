@@ -18,18 +18,13 @@ class Panel {
     var right: Panel? = null
 
     var mode: Int = -1 // Active lighting mode, 0 is solid color, 1 is gradient, 2 rainbow, etc..
+    var brightness: Int = 255
 
-    var statesInitialized = mutableListOf(false, false, false, false, false, false)
-
-    // Data for mode 0 (Solid color)
-    var r: Int = 255
-    var g: Int = 255
-    var b: Int = 255
-
-    // Data for mode 1 (custom gradient)
+    // Color palette data
     var palette = mutableListOf<PaletteColor>()
     var randomize = false
     var synchronize = true
+
 
     /*-----------------------------------------------------
      ---------Utilities for drawing network diagram--------
@@ -41,22 +36,14 @@ class Panel {
 
     /** Computes the position of the bottom-right vertex */
     fun getV2(): Vertex = Pair(
-        position.first + PANEL_SCALE * cosD(
-            angle
-        ),
-        position.second + PANEL_SCALE * sinD(
-            angle
-        )
+        position.first + PANEL_SCALE * cosD(angle),
+        position.second + PANEL_SCALE * sinD(angle)
     )
 
     /** Computes the position of the top vertex */
     fun getV3(): Vertex = Pair(
-        position.first + PANEL_SCALE * cosD(
-            -60f + angle
-        ),
-        position.second + PANEL_SCALE * sinD(
-            -60f + angle
-        )
+        position.first + PANEL_SCALE * cosD(-60f + angle),
+        position.second + PANEL_SCALE * sinD(-60f + angle)
     )
 
     /** Tests if the given xy point is contained in the triangle */
@@ -86,4 +73,3 @@ class Panel {
         return path
     }
 }
-

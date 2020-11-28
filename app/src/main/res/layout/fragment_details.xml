@@ -25,19 +25,24 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/Randomize"
+            <EditText
+                android:id="@+id/paneldetails_brightness_numinput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Randomize" />
+                android:ems="10"
+                android:inputType="number" />
 
-            <Switch
-                android:id="@+id/paneldetails_randomize_switch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <SeekBar
+                android:id="@+id/paneldetails_brightness_slider"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Switch" />
+                android:indeterminate="false"
+                android:max="255"
+                android:progress="5"
+                android:progressTintMode="multiply" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -45,19 +50,25 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/Synchronize"
+            <Switch
+                android:id="@+id/paneldetails_randomize_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Synchronize" />
+                android:text="Randomize" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Switch
                 android:id="@+id/paneldetails_synchronize_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Switch" />
+                android:text="Synchronize" />
         </LinearLayout>
 
         <LinearLayout
