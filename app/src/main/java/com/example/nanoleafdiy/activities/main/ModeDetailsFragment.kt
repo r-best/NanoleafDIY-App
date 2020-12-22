@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.nanoleafdiy.R
-import com.example.nanoleafdiy.activities.presets.PresetsActivity
+import com.example.nanoleafdiy.activities.palettes.PresetsActivity
 import com.example.nanoleafdiy.utils.*
 
 /**

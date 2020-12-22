@@ -1,4 +1,4 @@
-package com.example.nanoleafdiy.activities.presets
+package com.example.nanoleafdiy.activities.palettes
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
