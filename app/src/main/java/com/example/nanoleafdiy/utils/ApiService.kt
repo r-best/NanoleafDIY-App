@@ -70,9 +70,9 @@ class ApiService { companion object {
         api.getPanelState(JsonParser().parse(body)).enqueue(ResponseCallback(fun(res: JsonElement){
             val state = res.toString().substring(1, res.toString().length - 1)
             panel.mode = state.substring(0, 1).toInt()
-            panel.brightness = state.substring(2, 5).toInt()
-            panel.randomize = state.substring(5, 6) == "1"
-            panel.synchronize = state.substring(6, 7) == "1"
+            panel.brightness = state.substring(1, 4).toInt()
+            panel.randomize = state.substring(4, 5) == "1"
+            panel.synchronize = state.substring(5, 6) == "1"
 
             panel.palette = mutableListOf()
             for(i in 7 until state.length-1 step 10){
