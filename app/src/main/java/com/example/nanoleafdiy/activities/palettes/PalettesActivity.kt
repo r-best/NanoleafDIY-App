@@ -1,5 +1,6 @@
 package com.example.nanoleafdiy.activities.palettes
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout.LayoutParams
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +27,20 @@ class PresetsActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
+        findViewById<Button>(R.id.palette_add_button).setOnClickListener {
+            startActivityForResult(Intent(this, CreatePaletteActivity::class.java), 0)
+        }
+
+        refresh_list()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK && data != null)
+            refresh_list()
+    }
+
+    private fun refresh_list(){
         findViewById<RecyclerView>(R.id.presetcolor_list).apply {
             layoutManager = LinearLayoutManager(context)
             adapter = PresetListAdapter(PALETTE_PRESETS)

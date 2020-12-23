@@ -6,6 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/palette_add_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add new palette"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="fill_parent"
@@ -13,7 +21,7 @@
         android:fillViewport="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/palette_add_button">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/presetcolor_list"
