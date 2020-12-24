@@ -1,6 +1,5 @@
 package com.example.nanoleafdiy.utils
 
-import android.content.Context
 import android.widget.Toast
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
@@ -12,50 +11,55 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import java.net.InetAddress
 
 
-class ApiService { companion object {
-    interface API {
-        @GET("") fun health(): Call<JsonElement>
+class ApiService(val name: String, host: InetAddress, port: Int) {
+    companion object {
+        interface API {
+            @GET("/") fun health(): Call<Void>
 
-        /** Obtain the cached panel network configuration on the controller */
-        @GET("network") fun getNetworkTopology(): Call<JsonElement>
+            /** Obtain the cached panel network configuration on the controller */
+            @GET("network") fun getNetworkTopology(): Call<JsonElement>
 
-        /** Obtain the current panel network configuration, forcing the controller to recompute the network topology */
-        @GET("network/refresh") fun getNetworkTopologyWithRefresh(): Call<JsonElement>
+            /** Obtain the current panel network configuration, forcing the controller to recompute the network topology */
+            @GET("network/refresh") fun getNetworkTopologyWithRefresh(): Call<JsonElement>
 
-        /** Retrieve the current state of a panel, including its active mode and any settings related to that mode */
-        @POST("panels/state") fun getPanelState(@Body body: JsonElement): Call<JsonElement>
+            /** Retrieve the current state of a panel, including its active mode and any settings related to that mode */
+            @POST("panels/state") fun getPanelState(@Body body: JsonElement): Call<JsonElement>
 
-        /** Sets the active lighting mode of a given panel (solid color, gradient, rainbow, etc..) */
-        @POST("panels/mode") fun setMode(@Body body: JsonElement): Call<JsonElement>
+            /** Sets the active lighting mode of a given panel (solid color, gradient, rainbow, etc..) */
+            @POST("panels/mode") fun setMode(@Body body: JsonElement): Call<JsonElement>
 
-        /** Sets the brightness of a given panel (0-255) */
-        @POST("panels/brightness") fun setBrightness(@Body body: JsonElement): Call<JsonElement>
+            /** Sets the brightness of a given panel (0-255) */
+            @POST("panels/brightness") fun setBrightness(@Body body: JsonElement): Call<JsonElement>
 
-        /** Set the stored gradient state of a given panel */
-        @POST("panels/palette") fun setPalette(@Body body: JsonElement): Call<JsonElement>
+            /** Set the stored gradient state of a given panel */
+            @POST("panels/palette") fun setPalette(@Body body: JsonElement): Call<JsonElement>
+        }
     }
 
-    // Static IP because I couldn't get Android to recognize mDNS :(
-    private const val API_URL: String = "http://192.168.0.231"
+    private var api: API
 
-    private lateinit var api: API
-    private lateinit var toastContext: Context
-
-    fun init(context: Context){
+    init {
         api = Retrofit.Builder()
-            .baseUrl(API_URL)
+            .baseUrl("http:/%s:%d".format(host, port))
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(API::class.java)
-        toastContext = context
     }
 
     fun health(resolve: (Boolean) -> Unit){
-        api.health().enqueue(ResponseCallback(fun(res: JsonElement) {
-            resolve(true)
-        }))
+        api.health().enqueue(object : Callback<Void>{
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                resolve(true)
+            }
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                t.printStackTrace()
+                connectedServices.remove(name)
+                resolve(false)
+            }
+        })
     }
 
     fun getNetworkTopology(refresh: Boolean, resolve: (String) -> Unit){
@@ -122,7 +126,7 @@ class ApiService { companion object {
         }
         override fun onFailure(call: Call<JsonElement>, t: Throwable) {
             t.printStackTrace()
-            Toast.makeText(toastContext, t.message!!, Toast.LENGTH_LONG).show()
+            ToastManager.makeText(t.message!!, Toast.LENGTH_LONG)
         }
     }
-}}
+}

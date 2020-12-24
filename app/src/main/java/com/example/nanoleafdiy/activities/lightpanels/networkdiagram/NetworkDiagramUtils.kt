@@ -1,4 +1,4 @@
-package com.example.nanoleafdiy.activities.main.networkdiagram
+package com.example.nanoleafdiy.activities.lightpanels.networkdiagram
 
 import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.utils.Quadruple

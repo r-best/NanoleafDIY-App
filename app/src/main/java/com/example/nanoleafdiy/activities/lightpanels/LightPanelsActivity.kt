@@ -1,23 +1,38 @@
-package com.example.nanoleafdiy.activities.main
+package com.example.nanoleafdiy.activities.lightpanels
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.example.nanoleafdiy.*
-import com.example.nanoleafdiy.activities.main.networkdiagram.NetworkDiagramView
+import com.example.nanoleafdiy.activities.lightpanels.networkdiagram.NetworkDiagramView
 import com.example.nanoleafdiy.utils.ApiService
 import com.example.nanoleafdiy.utils.Panel
+import com.example.nanoleafdiy.utils.ToastManager
+import com.example.nanoleafdiy.utils.connectedServices
 
 
-class MainActivity : AppCompatActivity() {
+class LightPanelsActivity : AppCompatActivity() {
+
+    lateinit var serviceName: String
+    var api: ApiService? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_lightpanels)
+        serviceName = intent.getStringExtra("serviceName")!!
+
+        api = connectedServices[serviceName]
+        fun fail(){ ToastManager.makeText("Lost connection to $serviceName", Toast.LENGTH_LONG); finish() }
+        if(api == null)
+            fail()
+        api?.health {
+            if(!it)
+                fail()
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        ApiService.init(this)
     }
 
     fun redrawDiagram(){

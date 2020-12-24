@@ -1,10 +1,12 @@
 package com.example.nanoleafdiy.utils
 
-import com.example.nanoleafdiy.activities.main.networkdiagram.panels
+import com.example.nanoleafdiy.activities.lightpanels.networkdiagram.panels
 
 
 data class PaletteColor(var r: Int, var g: Int, var b: Int, var t: Int)
 data class Quadruple<A, B, C, D>(var first: A, var second: B, var third: C, var fourth: D)
+
+val connectedServices: LinkedHashMap<String, ApiService> = LinkedHashMap()
 
 fun getPanel(directions: String): Panel? {
     for(panel in panels){

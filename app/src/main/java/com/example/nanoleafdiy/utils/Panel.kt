@@ -1,10 +1,10 @@
 package com.example.nanoleafdiy.utils
 
 import android.graphics.Path
-import com.example.nanoleafdiy.activities.main.networkdiagram.PANEL_SCALE
-import com.example.nanoleafdiy.activities.main.networkdiagram.Vertex
-import com.example.nanoleafdiy.activities.main.networkdiagram.cosD
-import com.example.nanoleafdiy.activities.main.networkdiagram.sinD
+import com.example.nanoleafdiy.activities.lightpanels.networkdiagram.PANEL_SCALE
+import com.example.nanoleafdiy.activities.lightpanels.networkdiagram.Vertex
+import com.example.nanoleafdiy.activities.lightpanels.networkdiagram.cosD
+import com.example.nanoleafdiy.activities.lightpanels.networkdiagram.sinD
 
 /**
  * Holds all the information needed to draw a Panel on the network diagram, including

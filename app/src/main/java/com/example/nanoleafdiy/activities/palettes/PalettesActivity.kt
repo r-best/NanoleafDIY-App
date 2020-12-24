@@ -21,7 +21,7 @@ class PresetsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_presets)
+        setContentView(R.layout.activity_palettes)
     }
 
     override fun onStart() {

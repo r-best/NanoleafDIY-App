@@ -1,4 +1,4 @@
-package com.example.nanoleafdiy.activities.main
+package com.example.nanoleafdiy.activities.lightpanels
 
 import android.app.Activity
 import android.content.Intent
@@ -45,39 +45,39 @@ class ModeDetailsFragment : Fragment { constructor() : super()
     override fun onStart() {
         super.onStart()
 
-        (context as MainActivity).findViewById<TextView>(R.id.paneldetails_palette_name_display).text = matchPalette(panel.palette)
-        (context as MainActivity).findViewById<LinearLayout>(R.id.paneldetails_palette_display).setOnClickListener {
+        (context as LightPanelsActivity).findViewById<TextView>(R.id.paneldetails_palette_name_display).text = matchPalette(panel.palette)
+        (context as LightPanelsActivity).findViewById<LinearLayout>(R.id.paneldetails_palette_display).setOnClickListener {
             startActivityForResult(Intent(context, PresetsActivity::class.java), 0)
         }
 
-        val randomizeSwitch = (context as MainActivity).findViewById<Switch>(R.id.paneldetails_randomize_switch)
+        val randomizeSwitch = (context as LightPanelsActivity).findViewById<Switch>(R.id.paneldetails_randomize_switch)
         randomizeSwitch.isChecked = panel.randomize
         randomizeSwitch.setOnClickListener {
             panel.randomize = randomizeSwitch.isChecked
-            ApiService.setPalette(panel)
+            (context as LightPanelsActivity).api?.setPalette(panel)
         }
-        val synchronizeSwitch = (context as MainActivity).findViewById<Switch>(R.id.paneldetails_synchronize_switch)
+        val synchronizeSwitch = (context as LightPanelsActivity).findViewById<Switch>(R.id.paneldetails_synchronize_switch)
         synchronizeSwitch.isChecked = panel.synchronize
         synchronizeSwitch.setOnClickListener {
             panel.synchronize = synchronizeSwitch.isChecked
-            ApiService.setPalette(panel)
+            (context as LightPanelsActivity).api?.setPalette(panel)
         }
 
         updateBrightnessDisplay()
-        val slider = (context as MainActivity).findViewById<SeekBar>(R.id.paneldetails_brightness_slider)
+        val slider = (context as LightPanelsActivity).findViewById<SeekBar>(R.id.paneldetails_brightness_slider)
         slider.progress = panel.brightness
         slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onStopTrackingTouch(p0: SeekBar?) {
                 panel.brightness = slider.progress
                 updateBrightnessDisplay()
-                ApiService.setBrightness(panel)
+                (context as LightPanelsActivity).api?.setBrightness(panel)
             }
             override fun onStartTrackingTouch(p0: SeekBar?) {}
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
         })
 
-        val spinner = (context as MainActivity).findViewById<Spinner>(R.id.paneldetails_mode_dropdown)
-        ArrayAdapter(context as MainActivity, android.R.layout.simple_spinner_item, PANEL_MODES.map { it.name + " Mode" }).also {
+        val spinner = (context as LightPanelsActivity).findViewById<Spinner>(R.id.paneldetails_mode_dropdown)
+        ArrayAdapter(context as LightPanelsActivity, android.R.layout.simple_spinner_item, PANEL_MODES.map { it.name + " Mode" }).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinner.adapter = it
             spinner.setSelection(panel.mode)
@@ -94,22 +94,22 @@ class ModeDetailsFragment : Fragment { constructor() : super()
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK && data != null) {
             val preset = PALETTE_PRESETS[data.getIntExtra("preset_index", 0)]
-            (context as MainActivity).findViewById<TextView>(R.id.paneldetails_palette_name_display).text = preset.name
+            (context as LightPanelsActivity).findViewById<TextView>(R.id.paneldetails_palette_name_display).text = preset.name
             panel.palette = preset.colors
-            ApiService.setPalette(panel)
+            (context as LightPanelsActivity).api?.setPalette(panel)
         }
     }
 
     fun updateBrightnessDisplay(){
-        (context as MainActivity).findViewById<TextView>(R.id.paneldetails_brightness_numinput).text = ""+panel.brightness
+        (context as LightPanelsActivity).findViewById<TextView>(R.id.paneldetails_brightness_numinput).text = ""+panel.brightness
     }
 
     fun setPanelMode(mode: Int){
         println("SET PANEL MODE %d".format(mode))
         if(mode > -1 && mode != panel.mode){
             panel.mode = mode
-            ApiService.setMode(panel)
-            (context as MainActivity).redrawDiagram()
+            (context as LightPanelsActivity).api?.setMode(panel)
+            (context as LightPanelsActivity).redrawDiagram()
         }
     }
 }

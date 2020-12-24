@@ -1,4 +1,4 @@
-package com.example.nanoleafdiy.activities.main.networkdiagram
+package com.example.nanoleafdiy.activities.lightpanels.networkdiagram
 
 import android.content.Context
 import android.graphics.Canvas
@@ -7,10 +7,13 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
-import com.example.nanoleafdiy.activities.main.MainActivity
+import com.example.nanoleafdiy.activities.lightpanels.LightPanelsActivity
 import com.example.nanoleafdiy.utils.Panel
 import com.example.nanoleafdiy.utils.ApiService
+import com.example.nanoleafdiy.utils.ToastManager
+import com.example.nanoleafdiy.utils.connectedServices
 
 class NetworkDiagramView @JvmOverloads constructor(
     context: Context,
@@ -32,10 +35,11 @@ class NetworkDiagramView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
-        ApiService.getNetworkTopology(true, fun(result: String){
+
+        (context as LightPanelsActivity).api?.getNetworkTopology(true, fun(result: String){
             parseNetworkTopology(result)
             for(panel in panels)
-                ApiService.getPanelState(panel){ invalidate() }
+                (context as LightPanelsActivity).api?.getPanelState(panel){ invalidate() }
             adjustPosition(width, height)
             invalidate()
         })
@@ -48,13 +52,13 @@ class NetworkDiagramView @JvmOverloads constructor(
                     break
 
                 selectedPanel = panel
-                (context as MainActivity).openDetailsFragment(selectedPanel!!)
+                (context as LightPanelsActivity).openDetailsFragment(selectedPanel!!)
                 invalidate()
                 return super.onTouchEvent(event)
             }
         }
         selectedPanel = null
-        (context as MainActivity).closeDetailsFragment()
+        (context as LightPanelsActivity).closeDetailsFragment()
         invalidate()
         return super.onTouchEvent(event)
     }

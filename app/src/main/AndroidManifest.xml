@@ -12,8 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.palettes.CreatePaletteActivity"></activity>
-        <activity android:name=".activities.main.MainActivity">
+        <activity android:name=".activities.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activities.palettes.CreatePaletteActivity" />
+        <activity android:name=".activities.lightpanels.LightPanelsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
