@@ -4,18 +4,22 @@ import android.content.Context
 import android.content.Intent
 import android.net.nsd.NsdManager
 import android.net.nsd.NsdServiceInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.nanoleafdiy.R
 import com.example.nanoleafdiy.activities.lightpanels.LightPanelsActivity
-import com.example.nanoleafdiy.utils.*
+import com.example.nanoleafdiy.utils.ApiService
+import com.example.nanoleafdiy.utils.ToastManager
+import com.example.nanoleafdiy.utils.connectedServices
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var nsdManager: NsdManager
@@ -30,6 +34,12 @@ class MainActivity : AppCompatActivity() {
 
         nsdManager = (getSystemService(Context.NSD_SERVICE) as NsdManager).apply {
             discoverServices("_http._tcp", NsdManager.PROTOCOL_DNS_SD, discoveryListener)
+        }
+
+        val pullToRefresh: SwipeRefreshLayout = findViewById(R.id.services_pullToRefresh)
+        pullToRefresh.setOnRefreshListener {
+            refreshList()
+            pullToRefresh.isRefreshing = false
         }
     }
 
