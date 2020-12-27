@@ -15,7 +15,9 @@ class SquareImageView : androidx.appcompat.widget.AppCompatImageView {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val width: Int = measuredWidth
-        setMeasuredDimension(width, width)
+//        val width: Int = measuredWidth
+//        setMeasuredDimension(width, width)
+        val height: Int = measuredHeight
+        setMeasuredDimension(height, height)
     }
 }
