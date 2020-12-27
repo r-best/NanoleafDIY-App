@@ -1,5 +1,6 @@
 package com.example.nanoleafdiy.utils
 
+import com.example.nanoleafdiy.R
 import com.example.nanoleafdiy.activities.lightpanels.networkdiagram.panels
 
 
@@ -31,6 +32,10 @@ val PANEL_MODES: List<Mode> = listOf(
     Mode("Rainbow"),
     Mode("Theater Chase"),
     Mode("Theater Chase Rainbow")
+)
+
+val VALID_SERVICE_NAMES: Map<String, Int> = mapOf(
+    "lightpanels" to R.drawable.panels_icon
 )
 
 class Palette(var name: String, var colors: MutableList<PaletteColor>)

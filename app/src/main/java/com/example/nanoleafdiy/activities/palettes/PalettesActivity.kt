@@ -17,7 +17,7 @@ import com.example.nanoleafdiy.*
 import com.example.nanoleafdiy.utils.*
 
 
-class PresetsActivity : AppCompatActivity() {
+class PalettesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,8 +64,8 @@ class PresetListAdapter(private val dataset: List<Palette>): RecyclerView.Adapte
     override fun onBindViewHolder(holder: PresetViewHolder, i: Int) {
         holder.itemLayoutView.text = dataset[i].name
         holder.itemLayoutView.setOnClickListener { v: View -> run {
-            (v.context as PresetsActivity).setResult(RESULT_OK, Intent().apply { putExtra("preset_index", i) })
-            (v.context as PresetsActivity).finish()
+            (v.context as PalettesActivity).setResult(RESULT_OK, Intent().apply { putExtra("preset_index", i) })
+            (v.context as PalettesActivity).finish()
         }}
     }
 

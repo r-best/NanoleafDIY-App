@@ -15,19 +15,18 @@
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.palettes.CreatePaletteActivity" />
         <activity android:name=".activities.lightpanels.LightPanelsActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".activities.MainActivity" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.palettes.PresetsActivity" />
+        <activity android:name=".activities.palettes.PalettesActivity" />
+        <activity android:name=".activities.palettes.CreatePaletteActivity" />
     </application>
 
 </manifest>

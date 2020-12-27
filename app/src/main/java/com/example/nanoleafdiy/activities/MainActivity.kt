@@ -24,8 +24,6 @@ import com.example.nanoleafdiy.utils.*
 class MainActivity : AppCompatActivity() {
     private lateinit var nsdManager: NsdManager
 
-    private val VALID_SERVICE_NAMES: List<String> = listOf("lightpanels")
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -63,45 +61,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val discoveryListener = object : NsdManager.DiscoveryListener {
-        // Called as soon as service discovery begins.
-        override fun onDiscoveryStarted(regType: String) {
-            println("Service discovery started")
-        }
+        override fun onDiscoveryStarted(regType: String) { println("Service discovery started") }
+        override fun onDiscoveryStopped(serviceType: String) { println("Discovery stopped: $serviceType") }
+        override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) { println("Discovery failed: Error code: $errorCode"); nsdManager.stopServiceDiscovery(this) }
+        override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) { println("Discovery failed: Error code: $errorCode"); nsdManager.stopServiceDiscovery(this) }
 
         override fun onServiceFound(service: NsdServiceInfo) {
-            // A service was found! Do something with it.
-            println("Service discovery success$service")
+            println("Service discovery success $service")
             if(service.serviceName !in connectedServices && service.serviceName.split('-')[0] in VALID_SERVICE_NAMES)
                 nsdManager.resolveService(service, resolveListener)
         }
-
         override fun onServiceLost(service: NsdServiceInfo) {
             println("service lost: $service")
             connectedServices.remove(service.serviceName)
             refreshList()
         }
-
-        override fun onDiscoveryStopped(serviceType: String) {
-            println("Discovery stopped: $serviceType")
-        }
-
-        override fun onStartDiscoveryFailed(serviceType: String, errorCode: Int) {
-            println("Discovery failed: Error code:$errorCode")
-            nsdManager.stopServiceDiscovery(this)
-        }
-
-        override fun onStopDiscoveryFailed(serviceType: String, errorCode: Int) {
-            println("Discovery failed: Error code:$errorCode")
-            nsdManager.stopServiceDiscovery(this)
-        }
     }
-
     private val resolveListener = object : NsdManager.ResolveListener {
-        override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) {
-            // Called when the resolve fails. Use the error code to debug.
-            println("Resolve failed: $errorCode")
-        }
-
+        override fun onResolveFailed(serviceInfo: NsdServiceInfo, errorCode: Int) { println("Resolve failed: $errorCode") }
         override fun onServiceResolved(serviceInfo: NsdServiceInfo) {
             println("Resolve Succeeded. $serviceInfo")
             connectedServices[serviceInfo.serviceName] = ApiService(serviceInfo.serviceName, serviceInfo.host, serviceInfo.port)
@@ -112,15 +89,13 @@ class MainActivity : AppCompatActivity() {
 
 class ServiceListAdapter: RecyclerView.Adapter<ServiceListAdapter.ServiceViewHolder>(){
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceViewHolder {
-        return ServiceViewHolder(ServiceListViewItem(parent.context).apply {
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            setPadding(0, 20, 0, 20)
-            gravity = Gravity.CENTER
-        })
+        return ServiceViewHolder(ServiceListViewItem(parent.context))
     }
 
     override fun onBindViewHolder(holder: ServiceViewHolder, i: Int) {
-        holder.itemLayoutView.textView.text = connectedServices.keys.elementAt(i)
+        val name = connectedServices.keys.elementAt(i)
+        holder.itemLayoutView.textView.text = name
+        holder.itemLayoutView.image.setImageDrawable(getDrawable(holder.itemLayoutView.context.resources, VALID_SERVICE_NAMES[name.split('-')[0]]!!, null))
         holder.itemLayoutView.setOnClickListener { v: View -> run {
             val intent = Intent(v.context, LightPanelsActivity::class.java)
             val bundle = Bundle()
@@ -145,9 +120,6 @@ class ServiceListViewItem : LinearLayout {
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int): super(context, attrs, defStyleAttr, defStyleRes){
         inflate(context, R.layout.service_listview_item, this)
         textView = findViewById(R.id.service_listviewitem_text)
-        textView.textSize = 30f
-        gravity = Gravity.CENTER
         image = findViewById(R.id.service_listviewitem_icon)
-        image.setImageDrawable(getDrawable(resources, R.drawable.panels_icon, null))
     }
 }

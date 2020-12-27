@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.nanoleafdiy.R
-import com.example.nanoleafdiy.activities.palettes.PresetsActivity
+import com.example.nanoleafdiy.activities.palettes.PalettesActivity
 import com.example.nanoleafdiy.utils.*
 
 /**
@@ -47,7 +47,7 @@ class ModeDetailsFragment : Fragment { constructor() : super()
 
         (context as LightPanelsActivity).findViewById<TextView>(R.id.paneldetails_palette_name_display).text = matchPalette(panel.palette)
         (context as LightPanelsActivity).findViewById<LinearLayout>(R.id.paneldetails_palette_display).setOnClickListener {
-            startActivityForResult(Intent(context, PresetsActivity::class.java), 0)
+            startActivityForResult(Intent(context, PalettesActivity::class.java), 0)
         }
 
         val randomizeSwitch = (context as LightPanelsActivity).findViewById<Switch>(R.id.paneldetails_randomize_switch)

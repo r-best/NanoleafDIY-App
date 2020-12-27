@@ -19,6 +19,7 @@ class LightPanelsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lightpanels)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         serviceName = intent.getStringExtra("serviceName")!!
 
         api = connectedServices[serviceName]
