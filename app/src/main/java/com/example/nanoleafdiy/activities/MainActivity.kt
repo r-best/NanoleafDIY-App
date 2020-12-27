@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         ToastManager.init(this)
 
         nsdManager = (getSystemService(Context.NSD_SERVICE) as NsdManager).apply {
-            discoverServices("_services._dns-sd._udp", NsdManager.PROTOCOL_DNS_SD, discoveryListener)
+            discoverServices("_http._tcp.", NsdManager.PROTOCOL_DNS_SD, discoveryListener)
         }
 
         val pullToRefresh: SwipeRefreshLayout = findViewById(R.id.services_pullToRefresh)
@@ -128,10 +128,6 @@ class ServiceListAdapter: RecyclerView.Adapter<ServiceListAdapter.ServiceViewHol
             intent.putExtras(bundle)
             (v.context as MainActivity).startActivity(intent)
         }}
-        println(holder.itemLayoutView.image.layoutParams.height)
-        holder.itemLayoutView.image.layoutParams.height = holder.itemLayoutView.textView.height
-        holder.itemLayoutView.image.requestLayout()
-        println(holder.itemLayoutView.image.layoutParams.height)
     }
 
     override fun getItemCount(): Int { return connectedServices.size }
